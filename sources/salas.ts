@@ -2,10 +2,10 @@ import { Componente, Equipamento } from "./componente";
 import * as Tipos from './tipos';
 
 export class AreaDeTrabalho {
-    patchCords: Componente<Tipos.TipoCaboUTP>[];
-    numEtiquetas: number;
-    tomadasFemeas: Componente<Tipos.TipoConector> | null;
-    pontosTelecom: Componente<Tipos.TipoPontoTelecom>[] | null;
+    patchCords?: Componente<Tipos.TipoCaboUTP>[];
+    tomadasFemeas?: Componente<Tipos.TipoConector> | null;
+    pontosTelecom?: Componente<Tipos.TipoPontoTelecom>[] | null;
+    micelaneas?: Componente<Tipos.TipoMicelanea>[];
 
     constructor(pontosTelecom: Componente<Tipos.TipoPontoTelecom>[]) {
         this.pontosTelecom = pontosTelecom;
@@ -35,7 +35,8 @@ export class AreaDeTrabalho {
         }
 
         this.tomadasFemeas = new Componente<Tipos.TipoConector>(quantidadeTomadas, Tipos.TipoUnidadeQuantidades.UNIDADE, Tipos.TipoConector.CAT6);
-        this.numEtiquetas = quantidadeTomadas + totalPontos;
+        this.micelaneas = [];
+        this.micelaneas.push(new Componente<Tipos.TipoMicelanea>(quantidadeTomadas + totalPontos, Tipos.TipoUnidadeQuantidades.UNIDADE, Tipos.TipoMicelanea.ETIQUETAS_IDENTIFICACAO));
     }
 
     get numeroDiciplinas(): number {
@@ -61,8 +62,11 @@ abstract class UnidadeDeRede {
     rackAberto?: boolean;
     pigtails?: Componente<Tipos.TipoPigtailCordao>[];
     cordoes?: Componente<Tipos.TipoPigtailCordao>[];
+    patchCables?: Componente<Tipos.TipoCaboUTP>[];
+    jumperCables?: Componente<Tipos.TipoCaboUTP>[];
     acopladores?: Componente<Tipos.TipoAcoplador>[];
     equipamentos?: Equipamento[];
+    micelaneas?: Componente<Tipos.TipoMicelanea>[];
 
     constructor(
         equipamentos: Equipamento[] = [],
@@ -77,21 +81,32 @@ abstract class UnidadeDeRede {
         this.cordoes = cordoes;
         this.pigtails = pigtails;
     }
+
+    get racks(): Rack[] {
+        // TODO Realiza a lógica de separar em rack os componentes. adcionando o que for necessário para cada (exaustor, réguas, filtros, gavetas e micelaneas)
+        let rack = new Rack();
+        rack.fechado = true;
+        rack.equipamentos = this.equipamentos;
+
+        return [];
+    }
 }
 
 export class SalaDeTelecom extends UnidadeDeRede {
-    areaDeTrabalho: AreaDeTrabalho;
-    distanciaPontos: number;
-    andarPrincipal: boolean;
-    numeroPiso: number;
+    areaDeTrabalho?: AreaDeTrabalho;
+    distanciaPontos?: number;
+    andarPrincipal?: boolean;
+    numeroPiso?: number;
 
-    constructor(areaDeTrabalho: AreaDeTrabalho) {
+    constructor(areaDeTrabalho: AreaDeTrabalho, distanciaPontos: number, numeroPiso: number, rackAberto: boolean = false) {
         super();
+
         this.areaDeTrabalho = areaDeTrabalho;
-        this.distanciaPontos = 0;
-        this.rackAberto = false;
-        this.pigtails = [];
-        this.cordoes = [];
+
+        this.distanciaPontos = distanciaPontos;
+        this.rackAberto = rackAberto;
+        this.pigtails = []; // TODO Logica usando TO para 8 fibras ou menos, ou usando DIO para mais
+        this.cordoes = []; // TODO Fazer lógica
     }
 
     get numeroFibras() {
@@ -101,9 +116,10 @@ export class SalaDeTelecom extends UnidadeDeRede {
 }
 
 export class SalaDeEquipamentos extends UnidadeDeRede {
-    salasDeTelecom: UnidadeDeRede[];
-    salasDeEquipamentos: SalaDeEquipamentos[];
-    peDireitoAndares: number;
+    salasDeTelecom?: UnidadeDeRede[];
+    salasDeEquipamentos?: SalaDeEquipamentos[];
+    peDireitoAndares?: number;
+    micelaneas?: Componente<Tipos.TipoMicelanea>[];
 
     constructor() {
         super();

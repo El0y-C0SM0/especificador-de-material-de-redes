@@ -37,3 +37,9 @@ export enum TipoUnidadeQuantidades {
     CAIXA,
     UNIDADE
 }
+
+export enum TipoMicelanea {
+    ETIQUETAS_IDENTIFICACAO,
+    ABRACADEIRAS,
+    PORCAS_GAIOLAS
+}
