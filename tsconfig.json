@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES2015",
     "module": "AMD",    
     "outDir": "./build/",
     "sourceMap": true,
