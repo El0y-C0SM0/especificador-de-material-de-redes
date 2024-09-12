@@ -3,6 +3,7 @@ export enum TipoCaboUTP {
     VERMELHO_CAT6,
     AMARELO_CAT6,
     BRANCO_CAT6,
+    // TODO mudar para CAT6A
     CINZA_CAT7
 };
 
@@ -43,8 +44,9 @@ export class TipoPontoTelecom {
 
 // TODO definir melhor
 export enum TipoPigtailCordao {
-    LC_DUPLO_125_50,
-    LC_SIMPLES_125_50,
+    LC_DUPLO_50_125,
+    LC_SIMPLES_50_125,
+    SC_SIMPLES_50_125,
 }
 
 export enum TipoAcoplador {
@@ -61,7 +63,7 @@ export enum TipoEquipamento {
     TERMINADOR_OPTICO,
     DVR_24,
     EXAUSTOR,
-    
+    NO_BREAK,
 }
 
 export enum TipoComponenteRack {

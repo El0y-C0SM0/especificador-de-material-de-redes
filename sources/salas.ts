@@ -1,6 +1,6 @@
-import { Componente, ComponenteRack, Equipamento } from "./componente";
+import { Componente, Equipamento, Rack } from "./componente";
 import * as Tipos from './tipos';
-import { DistanciaInvalidaError } from "./excecoes";
+import { DistanciaInvalidaError, } from "./excecoes";
 
 export class AreaDeTrabalho {
     tomadasFemeas?: Componente<Tipos.TipoConector> | null;
@@ -45,82 +45,10 @@ export class AreaDeTrabalho {
     }
 }
 
-export class Rack {
-    static tamanhoMaximo = 48;
-    equipamentos: Map<Tipos.TipoEquipamento, Equipamento>;
-    componentes: Map<Tipos.TipoComponenteRack, ComponenteRack>
-    pigtails?: Componente<Tipos.TipoPigtailCordao>;
-    cordoes?: Componente<Tipos.TipoPigtailCordao>; 
-    patchCables?: Map<Tipos.TipoCaboUTP, Componente<Tipos.TipoCaboUTP>>;
-    jumperCables?: Componente<Tipos.TipoCaboUTP>;
-    acopladores?: Map<Tipos.TipoAcoplador, Componente<Tipos.TipoAcoplador>>; 
-    aberto: boolean;
-
-    constructor(equipamentosAtivos: Map<Tipos.TipoEquipamento, Equipamento>, aberto: boolean = false) {
-        this.equipamentos = new Map<Tipos.TipoEquipamento, Equipamento>(
-            [...equipamentosAtivos]
-        );
-
-        if (aberto) equipamentosAtivos.set(
-            Tipos.TipoEquipamento.EXAUSTOR,
-            new Equipamento(Tipos.TipoEquipamento.EXAUSTOR, 1, 1)
-        );
-
-        this.componentes.set(
-            Tipos.TipoComponenteRack.BANDEJA_DESLIZANTE,
-            new ComponenteRack(
-                Tipos.TipoComponenteRack.BANDEJA_DESLIZANTE,
-                1,
-                1
-            )
-        );
-
-        this.componentes.set(
-            Tipos.TipoComponenteRack.BANDEJA_FIXA,
-            new ComponenteRack(
-                Tipos.TipoComponenteRack.BANDEJA_FIXA,
-                1,
-                1
-            )
-        );
-
-        if (this.equipamentos.get(Tipos.TipoEquipamento.SWITCH_24) != undefined) {
-            let quantidadeSwitches = this.equipamentos.get(Tipos.TipoEquipamento.SWITCH_24).quantidade;
-
-            this.equipamentos.set(
-                Tipos.TipoEquipamento.PATCH_PANEL_24,
-                new  Equipamento(
-                    Tipos.TipoEquipamento.PATCH_PANEL_24,
-                    quantidadeSwitches,
-                    1
-                )
-            );
-
-            this.jumperCables = new Componente<Tipos.TipoCaboUTP>(
-                quantidadeSwitches - 1,
-                Tipos.TipoUnidadeQuantidades.UNIDADE,
-                Tipos.TipoCaboUTP.CINZA_CAT7
-            );
-
-
-        }
-
-
-    }
-
-    get alturaTotal() {
-        let altura = [...this.equipamentos.values(), ...this.componentes.values()].reduce((acc, curr) => acc + curr.alturaUnitaria, 0) * 1.5;
-
-        if (altura <= 12)
-            return altura + altura % 2;
-
-        return Math.ceil(altura / 4) * 4;
-    }
-}
-
+// TODO passar essa classe para SET e fazer SEQ herdar.
 abstract class UnidadeDeRede {
     rackAberto?: boolean;
-    // TODO passar os cables para map e atualizar o CAT6A por CAT6A
+    // * Duplo nos TO simples no DIO
     pigtails?: Componente<Tipos.TipoPigtailCordao>;
     cordoes?: Map<Tipos.TipoPigtailCordao, Componente<Tipos.TipoPigtailCordao>>;
     acopladores?: Map<Tipos.TipoAcoplador, Componente<Tipos.TipoAcoplador>>; 
@@ -138,31 +66,71 @@ abstract class UnidadeDeRede {
 
         if (quantidadeSwitches == undefined) return undefined;
 
+        let quantidade = this.racks.reduce((acc, rack) => acc + rack.jumperCables.quantidade, 0);
+
+
         return new Componente<Tipos.TipoCaboUTP>(
-            quantidadeSwitches - 1,
+            quantidade,
             Tipos.TipoUnidadeQuantidades.UNIDADE,
             Tipos.TipoCaboUTP.CINZA_CAT7
         );
     }
 
     get racks(): Rack[] {
-        // TODO Realiza a lógica de separar em rack os componentes. adcionando o que for necessário para cada (exaustor, réguas, filtros, gavetas e micelaneas)
         let racks: Rack[] = [];
 
-        let somaAlturas = [...this.equipamentosAtivos.values()].reduce(
-            (acc, cur) => acc + cur.alturaUnitaria,
-            0
-        );
+        // 20 por que ainda será contado os patch panels, exaustor e outros componentes.
+        try {
+            return [new Rack(this.equipamentosAtivos, this.rackAberto)];
+        } catch (error: any) {
+            /** Algoritmo da divisão de componentes
+             * 
+             * Como um rack tem limite máximo de 48u, preucupo-me em reservar um espaço para os
+             * componetes que ainda serão postos. A estratégia de divisão é buscar preencher o maior
+             * rack possivel, caso sobre, divide em racks de tamanhos similares e menores. Com os 
+             * racks divididos, ele calcula como seria adcionar itens a cada rack seguindo a ordem de
+             * disposição dos itens, sem mesclas.
+             */
 
-        if (somaAlturas <= 20) return [new Rack(this.equipamentosAtivos, this.rackAberto)];
+            let k = 1;
+            for (; Rack.arredondaAltura(error.altura / k) < 48; k++);
 
+            const fracao = Rack.arredondaAltura(error.altura / k);
+            let cont = fracao;
+            let selecionados: Map<Tipos.TipoEquipamento, Equipamento>;
 
+            this.equipamentosAtivos.forEach(equipamento => {
+                if(cont - equipamento.quantidade < 0) {
+                    selecionados.set(
+                        equipamento.tipo,
+                        new Equipamento(
+                            equipamento.tipo,
+                            cont,
+                            equipamento.alturaUnitaria
+                        )
+                    );
 
-        // let rack = new Rack();
-        // rack.aberto = true;
-        // rack.equipamentos = this.equipamentos;
+                    racks.push(new Rack(selecionados));
+                    selecionados.clear();
 
-        return [];
+                    selecionados.set(
+                        equipamento.tipo,
+                        new Equipamento(
+                            equipamento.tipo,
+                            -(cont - equipamento.quantidade),
+                            equipamento.alturaUnitaria
+                        )
+                    );
+                    cont = fracao + cont - equipamento.quantidade;
+                } else {
+                    selecionados.set(equipamento.tipo, equipamento);
+                }
+            });
+
+            racks.push(new Rack(selecionados));
+        }
+
+        return racks;
     }
 
     get equipamentos() : Map<Tipos.TipoEquipamento, Equipamento> {
@@ -208,14 +176,6 @@ export class SalaDeTelecom extends UnidadeDeRede {
             1
         ));
 
-        // TODO definir isso dentro do rack
-        this.micelaneas.set(Tipos.TipoMicelanea.ETIQUETAS_IDENTIFICACAO, new Componente<Tipos.TipoMicelanea>(
-            this.equipamentos.get(Tipos.TipoEquipamento.SWITCH_24).quantidade * ((24 + 1) * 2),
-            // 1 para cada porta do switch + 1 por switch + 1 para cada porta do patch panel + 1 por patch panel
-            Tipos.TipoUnidadeQuantidades.UNIDADE,
-            Tipos.TipoMicelanea.ETIQUETAS_IDENTIFICACAO
-        ));
-
         if (comprimentoMalhaHorizontal > 90) {
             throw new DistanciaInvalidaError(
                 "Distancia dos pontos de telecom até a sala de telecom não deve exeder 100 metros"
@@ -224,7 +184,7 @@ export class SalaDeTelecom extends UnidadeDeRede {
             
         this.comprimentoMalhaHorizontal = comprimentoMalhaHorizontal;
         this.numeroPiso = numeroPiso;
-        // this.cordoes = []; // TODO 1 cada ativo ligado ao DIO ou TO se for duplo.
+        // this.cordoes = []; // TODO 1 para cada ativo ligado ao DIO ou TO se for duplo.
     }
 
     defineAtivos(): void {

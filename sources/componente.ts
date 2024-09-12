@@ -1,4 +1,5 @@
-import { TipoEquipamento, TipoUnidadeQuantidades, TipoComponenteRack } from "./tipos";
+import { TamanhoRackInvalidoError } from "./excecoes";
+import { TipoEquipamento, TipoUnidadeQuantidades, TipoComponenteRack, TipoMicelanea, TipoCaboUTP, TipoAcoplador } from "./tipos";
 
 export class Componente<E> {
     quantidade?: number;
@@ -37,5 +38,116 @@ export class ComponenteRack extends ItemRack {
     constructor(tipo: TipoComponenteRack, quantidade: number, alturaUnitaria: number) {
         super(quantidade, alturaUnitaria);
         this.tipo = tipo;
+    }
+}
+
+export class Rack {
+    static tamanhoMaximo = 48;
+    equipamentos: Map<TipoEquipamento, Equipamento>;
+    componentes: Map<TipoComponenteRack, ComponenteRack>
+    jumperCables?: Componente<TipoCaboUTP>;
+    micelaneas?: Map<TipoMicelanea, Componente<TipoMicelanea>>;
+    aberto: boolean;
+
+    constructor(equipamentosAtivos: Map<TipoEquipamento, Equipamento>, aberto: boolean = false) {
+        this.equipamentos = new Map<TipoEquipamento, Equipamento>(
+            [...equipamentosAtivos]
+        );
+
+        if (aberto) equipamentosAtivos.set(
+            TipoEquipamento.EXAUSTOR,
+            new Equipamento(TipoEquipamento.EXAUSTOR, 1, 1)
+        );
+
+        this.componentes.set(
+            TipoComponenteRack.BANDEJA_DESLIZANTE,
+            new ComponenteRack(
+                TipoComponenteRack.BANDEJA_DESLIZANTE,
+                1,
+                1
+            )
+        );
+        this.componentes.set(
+            TipoComponenteRack.BANDEJA_FIXA,
+            new ComponenteRack(
+                TipoComponenteRack.BANDEJA_FIXA,
+                1,
+                1
+            )
+        );
+        
+        let quantidadeSwitches = 0;
+        if (this.equipamentos.get(TipoEquipamento.SWITCH_24) != undefined) {
+            quantidadeSwitches = this.equipamentos.get(TipoEquipamento.SWITCH_24).quantidade;
+
+            this.equipamentos.set(
+                TipoEquipamento.PATCH_PANEL_24,
+                new  Equipamento(
+                    TipoEquipamento.PATCH_PANEL_24,
+                    quantidadeSwitches,
+                    1
+                )
+            );
+            
+            this.jumperCables = new Componente<TipoCaboUTP>(
+                quantidadeSwitches - 1,
+                TipoUnidadeQuantidades.UNIDADE,
+                TipoCaboUTP.CINZA_CAT7
+            );
+            
+        }
+
+        let altura = this.alturaTotal;
+
+        if (altura > 48)
+            throw new TamanhoRackInvalidoError(
+                `Tamanho do rack alcançou ${altura} e 
+                execedeu o limite recomendavel de 44U, 
+                que deixaria 4 para expandir`,
+                altura
+            );
+        
+        this.defineMicelaneas(quantidadeSwitches);
+    }
+    
+    defineMicelaneas(quantidadeSwitches: number): void {
+        this.micelaneas.set(
+            TipoMicelanea.ETIQUETAS_IDENTIFICACAO,
+            new Componente<TipoMicelanea>(
+                /*
+                    para todas as portas do patch panels e switches
+                    + 
+                    os patch panels e switches 
+                    + 
+                    os cabos jumper
+                */
+                quantidadeSwitches * 24 * 2 + quantidadeSwitches * 2 + quantidadeSwitches - 1,
+                TipoUnidadeQuantidades.UNIDADE,
+                TipoMicelanea.ETIQUETAS_IDENTIFICACAO
+            )
+        );
+
+        this.micelaneas.set(
+            TipoMicelanea.PORCAS_GAIOLAS,
+            new Componente<TipoMicelanea>(
+                // cada U de altura requer 2 porcas de cada lado
+                this.alturaTotal * 4,
+                TipoUnidadeQuantidades.UNIDADE,
+                TipoMicelanea.PORCAS_GAIOLAS
+            )
+        );
+    }
+
+    static arredondaAltura(altura: number) {
+        if (altura <= 12)
+            return altura + altura % 2;
+
+        return Math.ceil(altura / 4) * 4;
+    }
+
+    get alturaTotal() {
+        let altura = [...this.equipamentos.values(), ...this.componentes.values()].reduce((acc, curr) => acc + curr.alturaUnitaria, 0) * 1.5;
+
+        return  Rack.arredondaAltura(altura);;
     }
 }
