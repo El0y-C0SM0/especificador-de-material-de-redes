@@ -12,8 +12,7 @@ export enum TipoConector {
 };
 
 export class TipoPontoTelecom {
-    // TODO mudar ETHERNET para ethernet
-    static ETHERNET = 0;
+    static REDE = 0;
     static CFTV = 1;
     static VOIP = 2;
 
@@ -21,7 +20,7 @@ export class TipoPontoTelecom {
         switch (tipoPonto) {
             case TipoPontoTelecom.CFTV:
                 return TipoCaboUTP.BRANCO_CAT6;
-            case TipoPontoTelecom.ETHERNET:
+            case TipoPontoTelecom.REDE:
                 return TipoCaboUTP.AZUL_CAT6;
             case TipoPontoTelecom.VOIP:
             default:
@@ -33,7 +32,7 @@ export class TipoPontoTelecom {
         switch (tipoPonto) {
             case TipoPontoTelecom.CFTV:
                 return TipoCaboUTP.VERMELHO_CAT6;
-            case TipoPontoTelecom.ETHERNET:
+            case TipoPontoTelecom.REDE:
                 return TipoCaboUTP.AZUL_CAT6;
             case TipoPontoTelecom.VOIP:
             default:

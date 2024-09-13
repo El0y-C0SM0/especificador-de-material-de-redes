@@ -27,7 +27,7 @@ export class AreaDeTrabalho {
 
         pontosTelecom.forEach(ponto => {
             totalPontos += ponto.quantidade;
-            quantidadeTomadas += (ponto.tipo === Tipos.TipoPontoTelecom.ETHERNET ? ponto.quantidade * 2 : ponto.quantidade);
+            quantidadeTomadas += (ponto.tipo === Tipos.TipoPontoTelecom.REDE ? ponto.quantidade * 2 : ponto.quantidade);
 
             let tipoCabo = Tipos.TipoPontoTelecom.toTipoPatchCord(ponto.tipo);
         
@@ -347,7 +347,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
 
         return new Componente<Tipos.TipoFibraOptica>(distancia, Tipos.TipoUnidadeQuantidades.METRO, this.tipoFibra);
     }
-
+    // ethernet pode ser sinonimo de rede no contexto de telecom?
     defineAtivos(): void {
         super.defineAtivos();
 
