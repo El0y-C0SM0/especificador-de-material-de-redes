@@ -67,6 +67,7 @@ export class Rack {
                 1
             )
         );
+
         this.componentes.set(
             TipoComponenteRack.BANDEJA_FIXA,
             new ComponenteRack(
@@ -75,6 +76,8 @@ export class Rack {
                 1
             )
         );
+
+        // TODO definir no-break
         
         let quantidadeSwitches = 0;
         if (this.equipamentos.get(TipoEquipamento.SWITCH_24) != undefined) {
@@ -108,6 +111,8 @@ export class Rack {
             );
         
         this.defineMicelaneas(quantidadeSwitches);
+
+        Object.freeze(this);
     }
     
     defineMicelaneas(quantidadeSwitches: number): void {
