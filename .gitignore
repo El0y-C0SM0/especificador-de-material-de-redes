@@ -1,2 +1,11 @@
-node_modules/*
-package-lock.json
+# Node modules
+node_modules/
+
+# Build output
+dist/
+
+# Logs
+*.log
+
+# Environment variables
+.env

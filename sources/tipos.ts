@@ -12,6 +12,7 @@ export enum TipoConector {
 };
 
 export class TipoPontoTelecom {
+    // TODO mudar REDE para ethernet
     static REDE = 0;
     static CFTV = 1;
     static VOIP = 2;
