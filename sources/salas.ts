@@ -336,7 +336,7 @@ export class SalaDeEquipamentos extends UnidadeDeRede {
 
         return new Componente<Tipos.TipoFibraOptica>(distancia, Tipos.TipoUnidadeQuantidades.METRO, this.tipoFibra);
     }
-
+    
     defineAtivos(): void {
         this.salasDeTelecom.forEach(sala => sala.diciplinas.has(Tipos.TipoPontoTelecom.CFTV));
 

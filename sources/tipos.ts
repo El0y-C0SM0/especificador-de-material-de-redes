@@ -68,7 +68,9 @@ export enum TipoEquipamento {
 
 export enum TipoComponenteRack {
     BANDEJA_FIXA,
-    BANDEJA_DESLIZANTE
+    BANDEJA_DESLIZANTE,
+    ORGANIZADOR,
+    REGUA_FECHAMENTO,
 }
 
 export enum TipoUnidadeQuantidades {
@@ -88,7 +90,7 @@ export class TipoFibraOptica {
     static FOSM_9_125 = 1;
 
     static getTipoFibra(distancia: number) : TipoFibraOptica {
-        if(distancia <= 550)
+        if(distancia <= 300)
             return  TipoFibraOptica.FOMMIG_50_125;
 
         return  TipoFibraOptica.FOSM_9_125;
