@@ -61,7 +61,7 @@ export enum TipoEquipamento {
     DIO_24,
     DIO_24_4,
     TERMINADOR_OPTICO,
-    DVR_24,
+    SVR_24,
     EXAUSTOR,
     NO_BREAK,
 }
