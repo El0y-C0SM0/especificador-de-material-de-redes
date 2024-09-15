@@ -3,7 +3,6 @@ export enum TipoCaboUTP {
     VERMELHO_CAT6,
     AMARELO_CAT6,
     BRANCO_CAT6,
-    // TODO mudar para CAT6A
     CINZA_CAT7
 };
 
@@ -12,7 +11,6 @@ export enum TipoConector {
 };
 
 export class TipoPontoTelecom {
-    // TODO mudar REDE para ethernet
     static REDE = 0;
     static CFTV = 1;
     static VOIP = 2;
@@ -42,16 +40,21 @@ export class TipoPontoTelecom {
     }
 }
 
-// TODO definir melhor
-export enum TipoPigtailCordao {
-    LC_DUPLO_50_125,
-    LC_SIMPLES_50_125,
-    SC_SIMPLES_50_125,
-}
+export class TipoAcopladorPigtailCordao {
+    static LC_DUPLO_MM_50_125 = 0;
+    static LC_SIMPLES_MM_50_125 = 1;
+    static LC_DUPLO_SM_9_125 = 2;
+    static LC_SIMPLES_SM_9_125 = 3;
 
-export enum TipoAcoplador {
-    LC_DUPLO,
-    LC_SIMPLES
+    static getTipo(tipo: TipoFibraOptica, duplo: boolean): TipoAcopladorPigtailCordao{
+        if (tipo == TipoFibraOptica.FOMMIG_50_125) {
+            if (duplo) return TipoAcopladorPigtailCordao.LC_DUPLO_MM_50_125;
+            else return TipoAcopladorPigtailCordao.LC_DUPLO_MM_50_125;
+        } else {
+            if (duplo) return TipoAcopladorPigtailCordao.LC_SIMPLES_SM_9_125;
+            else return TipoAcopladorPigtailCordao.LC_SIMPLES_SM_9_125;
+        }
+    }
 }
 
 export enum TipoEquipamento {
@@ -69,8 +72,8 @@ export enum TipoEquipamento {
 export enum TipoComponenteRack {
     BANDEJA_FIXA,
     BANDEJA_DESLIZANTE,
-    ORGANIZADOR,
-    REGUA_FECHAMENTO,
+    ORGANIZADOR_FRONTAL,
+    BANDEJA_DE_EMENDA_12
 }
 
 export enum TipoUnidadeQuantidades {

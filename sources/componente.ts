@@ -1,5 +1,5 @@
 import { TamanhoRackInvalidoError } from "./excecoes";
-import { TipoEquipamento, TipoUnidadeQuantidades, TipoComponenteRack, TipoMicelanea, TipoCaboUTP, TipoAcoplador } from "./tipos";
+import { TipoEquipamento, TipoUnidadeQuantidades, TipoComponenteRack, TipoMicelanea, TipoCaboUTP, TipoAcopladorPigtailCordao } from "./tipos";
 
 export class Componente<E> {
     quantidade: number;
@@ -77,7 +77,16 @@ export class Rack {
             )
         );
 
-        // TODO definir no-break
+        let quantidadeDIO = this.equipamentos.get(TipoEquipamento.DIO_24)?.quantidade ?? 0;
+
+        this.componentes.set(
+            TipoComponenteRack.BANDEJA_DE_EMENDA_12,
+            new  ComponenteRack(
+                TipoComponenteRack.BANDEJA_DE_EMENDA_12,
+                quantidadeDIO,
+                0
+            )
+        );
         
         let quantidadeSwitches = 0;
         if (this.equipamentos.get(TipoEquipamento.SWITCH_24) != undefined) {
@@ -87,6 +96,15 @@ export class Rack {
                 TipoEquipamento.PATCH_PANEL_24,
                 new  Equipamento(
                     TipoEquipamento.PATCH_PANEL_24,
+                    quantidadeSwitches,
+                    1
+                )
+            );
+
+            this.componentes.set(
+                TipoComponenteRack.ORGANIZADOR_FRONTAL,
+                new  ComponenteRack(
+                    TipoComponenteRack.ORGANIZADOR_FRONTAL,
                     quantidadeSwitches,
                     1
                 )

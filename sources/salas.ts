@@ -3,7 +3,7 @@ import * as Tipos from './tipos';
 import { DistanciaInvalidaError, } from "./excecoes";
 
 export class AreaDeTrabalho {
-    tomadasFemeas?: Componente<Tipos.TipoConector> | null;
+    tomadasFemeas: Componente<Tipos.TipoConector> | null;
     patchCords: Map<Tipos.TipoCaboUTP, Componente<Tipos.TipoCaboUTP>>;
     micelaneas: Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>;
     private _pontosTelecom: Map<Tipos.TipoPontoTelecom, Componente<Tipos.TipoPontoTelecom>>;
@@ -58,10 +58,9 @@ export class AreaDeTrabalho {
 export class SalaDeTelecom {
     rackAberto: boolean;
     // Pigtails são duplos nos TO e simples no DIO
-    pigtails?: Componente<Tipos.TipoPigtailCordao>;
-    cordoes?: Map<Tipos.TipoPigtailCordao, Componente<Tipos.TipoPigtailCordao>>;
-    // ? É o mesmo que transcivers
-    acopladores?: Map<Tipos.TipoAcoplador, Componente<Tipos.TipoAcoplador>>; 
+    pigtails: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
+    cordoes: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
+    acopladores: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>; 
     equipamentosAtivos: Map<Tipos.TipoEquipamento, Equipamento>;
     micelaneas?: Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>;
     // É tanto as fibras que redebem da SEQ primária quanto do provedor.
@@ -87,7 +86,6 @@ export class SalaDeTelecom {
             
         this.comprimentoMalhaHorizontal = comprimentoMalhaHorizontal;
         this.numeroPiso = numeroPiso;
-        // this.cordoes = []; // TODO 1 para cada ativo ligado ao DIO ou TO se for duplo.
 
         this.defineAtivos();
     }
@@ -109,6 +107,8 @@ export class SalaDeTelecom {
             1
         ));
 
+        let tipoAcoplador: Tipos.TipoAcopladorPigtailCordao;
+        let quantidadeAcopladores: number;
 
         if(this.numeroFibras <= 8) {
             this.equipamentos.set(Tipos.TipoEquipamento.TERMINADOR_OPTICO, new Equipamento(
@@ -116,15 +116,57 @@ export class SalaDeTelecom {
                 1, 
                 0, 
             ));
+
+            tipoAcoplador = Tipos.TipoAcopladorPigtailCordao.getTipo(
+                this.fibrasOpticasRecebidas.tipo,
+                true
+            );
+            quantidadeAcopladores = this.numeroFibras / 2;
+
         } else {
-            this.equipamentos.set(Tipos.TipoEquipamento.DIO_24_4, new Equipamento(
-                Tipos.TipoEquipamento.DIO_24_4, 
+            this.equipamentos.set(Tipos.TipoEquipamento.DIO_24, new Equipamento(
+                Tipos.TipoEquipamento.DIO_24, 
                 Math.ceil(this.numeroFibras / 24), 
                 1,
             ));
-
-            // TODO fazer quantificação de pigtails, cordoes e conectores.
+            
+            tipoAcoplador = Tipos.TipoAcopladorPigtailCordao.getTipo(
+                this.fibrasOpticasRecebidas.tipo,
+                false
+            );
+            quantidadeAcopladores = this.numeroFibras;
         }
+
+        this.defineAcopladores(tipoAcoplador, quantidadeAcopladores);
+    }
+
+    defineAcopladores(
+        tipoAcoplador: Tipos.TipoAcopladorPigtailCordao, 
+        quantidadeAcopladores: number,
+    ): void {
+        this.pigtails.set(tipoAcoplador,
+            new Componente<Tipos.TipoAcopladorPigtailCordao>(
+                quantidadeAcopladores,
+                Tipos.TipoUnidadeQuantidades.UNIDADE,
+                tipoAcoplador,
+            )
+        );
+    
+        this.cordoes.set(tipoAcoplador,
+            new Componente<Tipos.TipoAcopladorPigtailCordao>(
+                quantidadeAcopladores,
+                Tipos.TipoUnidadeQuantidades.UNIDADE,
+                tipoAcoplador,
+            )
+        );
+    
+        this.acopladores.set(tipoAcoplador,
+            new Componente<Tipos.TipoAcopladorPigtailCordao>(
+                quantidadeAcopladores,
+                Tipos.TipoUnidadeQuantidades.UNIDADE,
+                tipoAcoplador,
+            )
+        );
     }
 
     get numeroFibras() {
@@ -286,6 +328,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
         this.defineAtivos();
     }
 
+    // informa o tipo da fibra que leva até as SEQ e SET
     get tipoFibra(): Tipos.TipoFibraOptica {
         let maiorFibra = 0;
 
@@ -320,6 +363,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
         return diciplinas;
     }
 
+    // informa o numero de fibras que leva até as SEQ e SET
     get numeroFibras() : number {
         let numeroFibras = 0;
 
@@ -347,7 +391,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
 
         return new Componente<Tipos.TipoFibraOptica>(distancia, Tipos.TipoUnidadeQuantidades.METRO, this.tipoFibra);
     }
-    // ethernet pode ser sinonimo de rede no contexto de telecom?
+    
     defineAtivos(): void {
         super.defineAtivos();
 
@@ -378,37 +422,48 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
         }
 
         this.equipamentosAtivos.set(Tipos.TipoEquipamento.DIO_24_4, new Equipamento(
-            Tipos.TipoEquipamento.DIO_24_4, 
-            Math.ceil((this.salasDeEquipamentos.length + this.salasDeTelecom.length) / 4), 
+            Tipos.TipoEquipamento.DIO_24, 
+            Math.ceil(this.numeroFibras / 24), 
             1,
         ));
 
-        // TODO fazer quantificação de pigtails, cordoes e conectores.
+        let tipoAcoplador = Tipos.TipoAcopladorPigtailCordao.getTipo(this.tipoFibra, false);   
 
+        this.defineAcopladores(tipoAcoplador, this.numeroFibras);
+        
         this.equipamentosAtivos.set(Tipos.TipoEquipamento.DIO_24_4, new Equipamento(
             Tipos.TipoEquipamento.DIO_24_4, 
             // mais 1 para receber as fibras da entrada de facilidade separado.
             Math.ceil(this.numeroFibras / 24) + 1, 
             1,
         ));
+        
+        tipoAcoplador = Tipos.TipoAcopladorPigtailCordao.getTipo(
+            this.fibrasOpticasRecebidas.tipo, 
+            false
+        );
+        
+        this.defineAcopladores(tipoAcoplador, this.fibrasOpticasRecebidas.quantidade);
     }
 
     defineFibrasOpticas(
         quantidadeFibrasRecebidas: number = 12,
         tipoFibraRecebida: Tipos.TipoFibraOptica = Tipos.TipoFibraOptica.FOSM_9_125
     ): void {
+        let tipoFibra = this.fibraBackbone.tipo;
+
         this.salasDeTelecom.forEach(sala => sala.fibrasOpticasRecebidas =
             new Componente<Tipos.TipoFibraOptica>(
                 sala.numeroFibras, 
                 Tipos.TipoUnidadeQuantidades.UNIDADE, 
-                this.fibraBackbone.tipo
+                tipoFibra
         ));
 
         this.salasDeEquipamentos.forEach(sala => sala.fibrasOpticasRecebidas =
             new Componente<Tipos.TipoFibraOptica>(
                 sala.numeroFibras, 
                 Tipos.TipoUnidadeQuantidades.UNIDADE, 
-                this.fibraBackbone.tipo
+                tipoFibra
         ));
 
         this.fibrasOpticasRecebidas = new Componente<Tipos.TipoFibraOptica>(
