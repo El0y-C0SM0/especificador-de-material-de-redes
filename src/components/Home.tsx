@@ -17,7 +17,7 @@ const Home: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState('');
   const [numPavimentos, setNumPavimentos] = useState(0);
   const [numBackbones, setNumBackbones] = useState(0);
-  const [backbonePavimentos, setBackbonePavimentos] = useState({});
+  const [backbonePavimentos, setBackbonePavimentos] = useState<{ [key: number]: number }>({});
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
@@ -110,7 +110,7 @@ const Home: React.FC = () => {
                       <Label className="p-1 text-lg block">Pavimento {j + 1}</Label>
                       {i === 0 && j === 0 && (
                         <Label className="p-1 block">
-                          Marque as disciplinas que estarão no andar e informe as respectivas quantidades de pontos de telecom de cada uma.
+                          Marque as disciplinas que estarão no andar e informe as respectivas quantidades de pontos de rede de cada uma.
                         </Label>
                       )}
                     </div>
@@ -195,7 +195,7 @@ const Home: React.FC = () => {
               <Label className="p-1 text-lg block">Pavimento {i + 1}</Label>
               {i === 0 && (
                 <Label className="p-1 block">
-                  Marque as disciplinas que estarão no andar e informe as respectivas quantidades de pontos de telecom de cada uma.
+                  Marque as disciplinas que estarão no andar e informe as respectivas quantidades de pontos de rede de cada uma.
                 </Label>
               )}
             </div>
