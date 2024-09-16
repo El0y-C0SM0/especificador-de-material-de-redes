@@ -90,9 +90,9 @@ const Home: React.FC = () => {
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="flex flex-col space-y-2 p-2">
-                <div className="flex items-center space-x-2 p-2">
+                <div className="flex items-center space-x-2 p-1">
                   <Checkbox
-                    className="m-1 mt-3"
+                    className="m-1 mt-3 mr-0"
                     id={`disciplina-1-${i}`}
                     name={`disciplina-1-${i}`}
                   />
@@ -104,9 +104,9 @@ const Home: React.FC = () => {
                 />
               </div>
               <div className="flex flex-col space-y-2 p-2">
-                <div className="flex items-center space-x-2 p-2">
+                <div className="flex items-center space-x-2 p-1">
                   <Checkbox
-                    className="m-1 mt-3"
+                    className="m-1 mt-3 mr-0"
                     id={`disciplina-2-${i}`}
                     name={`disciplina-2-${i}`}
                   />
@@ -118,9 +118,9 @@ const Home: React.FC = () => {
                 />
               </div>
               <div className="flex flex-col space-y-2 p-2">
-                <div className="flex items-center space-x-2 p-2">
+                <div className="flex items-center space-x-2 p-1">
                   <Checkbox
-                    className="m-1 mt-3"
+                    className="m-1 mt-3 mr-0"
                     id={`disciplina-3-${i}`}
                     name={`disciplina-3-${i}`}
                   />
@@ -161,7 +161,7 @@ const Home: React.FC = () => {
   );
 
   return (
-    <main className="container w-2/3 mx-auto h-screen flex flex-col">
+    <main className="container w-full mx-auto h-screen flex flex-col md:w-2/3">
       <header className="p-4 mb-4">
         <h1 className="text-3xl font-bold">Quantificação de backbone óptico</h1>
         <h2 className="text-2xl font-bold mt-4">Dados de entrada</h2>
