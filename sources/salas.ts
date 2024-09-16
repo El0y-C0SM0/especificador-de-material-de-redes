@@ -295,7 +295,7 @@ export class SalaDeTelecom {
 export class SalaDeEquipamentoRacks extends SalaDeTelecom {
     salasDeTelecom: SalaDeTelecom[];
     // SEQ secundarias
-    salasDeEquipamentoRacks: SalaDeEquipamentoRacks[];
+    salasDeEquipamento: SalaDeEquipamentoRacks[];
     peDireitoAndares: number;
     // distancia que essa seq está da principal.
     distanciaSEQ: number;
@@ -305,7 +305,7 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
         comprimentoMalhaHorizontal: number, 
         numeroPiso: number, 
         salasDeTelecom: SalaDeTelecom[],
-        salasDeEquipamentoRacks: SalaDeEquipamentoRacks[] = [], 
+        salasDeEquipamento: SalaDeEquipamentoRacks[] = [], 
         distanciaSEQ: number = 0, 
         rackAberto: boolean = false,
         quantidadeFibrasRecebidas: number = 12,
@@ -313,7 +313,7 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
     ) {
         super(areaDeTrabalho, comprimentoMalhaHorizontal, numeroPiso, rackAberto=rackAberto);
         this.salasDeTelecom = salasDeTelecom;
-        this.salasDeEquipamentoRacks = salasDeEquipamentoRacks;
+        this.salasDeEquipamento = salasDeEquipamento;
         this.distanciaSEQ = distanciaSEQ;
 
         this.defineFibrasOpticas(quantidadeFibrasRecebidas, tipoFibrasRecebidas);
@@ -332,7 +332,7 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
     get tipoFibra(): Tipos.TipoFibraOptica {
         let maiorFibra = 0;
 
-        if(this.salasDeEquipamentoRacks.length == 0) {
+        if(this.salasDeEquipamento.length == 0) {
             let sortedSalasDeTelecom = this.salasDeTelecom.slice().sort((a, b) => {
                 return a.numeroPiso - b.numeroPiso;
             });
@@ -340,8 +340,8 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
             maiorFibra = Math.max(...sortedSalasDeTelecom.map(sala => {
                 return Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.peDireitoAndares; 
             }));
-        } else if (this.salasDeEquipamentoRacks.length != 0) {
-            let sortedSalasDeEquipamentoRacks = this.salasDeEquipamentoRacks.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
+        } else if (this.salasDeEquipamento.length != 0) {
+            let sortedSalasDeEquipamentoRacks = this.salasDeEquipamento.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
 
             maiorFibra = Math.max(...sortedSalasDeEquipamentoRacks.map(sala => sala.distanciaSEQ));
         }
@@ -356,7 +356,7 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
             sala.diciplinas.forEach(diciplina => diciplinas.add(diciplina));
         });
 
-        this.salasDeEquipamentoRacks.forEach(sala => {
+        this.salasDeEquipamento.forEach(sala => {
             sala.diciplinas.forEach(diciplina => diciplinas.add(diciplina));
         });
 
@@ -368,7 +368,7 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
         let numeroFibras = 0;
 
         this.salasDeTelecom.forEach(sala => numeroFibras += sala.numeroFibras);
-        this.salasDeEquipamentoRacks.forEach(sala => numeroFibras += sala.numeroFibras);
+        this.salasDeEquipamento.forEach(sala => numeroFibras += sala.numeroFibras);
         numeroFibras += super.numeroFibras;
 
         return numeroFibras;
@@ -385,7 +385,7 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
             distancia += Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.peDireitoAndares; 
         });
 
-        let sortedSalasDeEquipamentoRacks = this.salasDeEquipamentoRacks.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
+        let sortedSalasDeEquipamentoRacks = this.salasDeEquipamento.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
 
         sortedSalasDeEquipamentoRacks.forEach(sala => distancia += sala.distanciaSEQ);
 
@@ -409,7 +409,7 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
                     quantidadeFibrasCFTV += 2;
             });
 
-            this.salasDeEquipamentoRacks.forEach(sala => {
+            this.salasDeEquipamento.forEach(sala => {
                 if (sala.diciplinas.has(Tipos.TipoPontoTelecom.CFTV))
                     quantidadeFibrasCFTV += 1;
             });
@@ -459,7 +459,7 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
                 tipoFibra
         ));
 
-        this.salasDeEquipamentoRacks.forEach(sala => sala.fibrasOpticasRecebidas =
+        this.salasDeEquipamento.forEach(sala => sala.fibrasOpticasRecebidas =
             new Componente<Tipos.TipoFibraOptica>(
                 sala.numeroFibras, 
                 Tipos.TipoUnidadeQuantidades.UNIDADE, 
