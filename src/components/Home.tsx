@@ -12,9 +12,10 @@ import { Table,
          TableCell } from "@/components/ui/table";
 
 const Home: React.FC = () => {
-
   const [selectedOption, setSelectedOption] = useState('');
   const [numPavimentos, setNumPavimentos] = useState(0);
+  const [numBackbones, setNumBackbones] = useState(0);
+  const [backbonePavimentos, setBackbonePavimentos] = useState({});
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
@@ -22,6 +23,14 @@ const Home: React.FC = () => {
 
   const handleNumPavimentosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNumPavimentos(parseInt(e.target.value, 10));
+  };
+
+  const handleNumBackbonesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNumBackbones(parseInt(e.target.value, 10));
+  };
+
+  const handleBackbonePavimentosChange = (backboneIndex: number, pavimentos: number) => {
+    setBackbonePavimentos((prevPavimentos) => ({ ...prevPavimentos, [backboneIndex]: pavimentos }));
   };
 
   const renderRadioGroup = () => (
@@ -51,20 +60,120 @@ const Home: React.FC = () => {
   );
 
   const renderSecondaryBackbone = () => (
-    <div className="bg-slate-100 p-2 rounded-[10px] mt-4">
-      <Label className="p-2 text-lg">Quantos backbone secundários haverá?</Label>
-      <Input className="max-w-sm m-2" type="number" />
+    <div>
+      <div className="bg-slate-100 p-2 rounded-[10px] mt-4">
+        <div className="w-full px-2">
+          <Label className="p-2 text-lg">Qual o número de backbones secundários?</Label>
+          <Input
+            min={1}
+            max={10}
+            className="w-full grow"
+            type="number"
+            value={numBackbones}
+            onChange={handleNumBackbonesChange}
+          />
+        </div>
+      </div>
+      {Array.from({ length: numBackbones }, (_, i) => (
+        <div key={i} className="bg-slate-100 p-2 rounded-[10px] mt-4">
+          <div className="bg-slate-100 p-2 rounded-[10px]">
+            <div>
+              <Label className="p-1 text-lg block">Backbone {i + 1}</Label>
+              <div className="flex flex-wrap justify-center">
+                <div className="w-full px-2">
+                  <Label className="p-2 text-lg block">Qual a distância até o backbone primário? (em metros)</Label>
+                  <Input min={1} max={10} className="w-full grow" type="number" />
+                </div>
+                <div className="w-full px-2">
+                  <Label className="p-2 text-lg block">Qual a altura de cada andar? (em metros)</Label>
+                  <Input min={1} max={10} className="w-full grow" type="number" />
+                </div>
+                <div className="w-full px-2 mt-2">
+                  <Label className="p-2 text-lg block">Qual o número de pavimentos do backbone {i + 1}?</Label>
+                  <Input
+                    min={1}
+                    max={30}
+                    step={1}
+                    className="w-full grow"
+                    type="number"
+                    value={backbonePavimentos[i] || 0}
+                    onChange={(e) => handleBackbonePavimentosChange(i, parseInt(e.target.value, 10))}
+                  />
+                </div>
+              </div>
+              {Array.from({ length: backbonePavimentos[i] || 0 }, (_, j) => (
+                <div key={j} className="bg-slate-100 p-2 rounded-[10px] mt-4">
+                  <div className="bg-slate-200 p-2 rounded-[10px]">
+                    <div>
+                      <Label className="p-1 text-lg block">Pavimento {j + 1}</Label>
+                      {i === 0 && j === 0 && (
+                        <Label className="p-1 block">
+                          Marque as disciplinas que estarão no andar e informe as respectivas quantidades de pontos de telecom de cada uma.
+                        </Label>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="flex flex-col space-y-2 p-2">
+                        <div className="flex items-center space-x-2 p-1">
+                          <Checkbox
+                            className="m-1 mt-3 mr-0"
+                            id={`disciplina-1-${i}-${j}`}
+                            name={`disciplina-1-${i}-${j}`}
+                          />
+                          <Label className="m-1 mt-2">Dados</Label>
+                        </div>
+                        <Input
+                          className="m-1"
+                          type="number"
+                        />
+                      </div>
+                      <div className="flex flex-col space-y-2 p-2">
+                        <div className="flex items-center space-x-2 p-1">
+                          <Checkbox
+                            className="m-1 mt-3 mr-0"
+                            id={`disciplina-2-${i}-${j}`}
+                            name={`disciplina-2-${i}-${j}`}
+                          />
+                          <Label className="m-1">VoIP</Label>
+                        </div>
+                        <Input
+                          className="m-1"
+                          type="number"
+                        />
+                      </div>
+                      <div className="flex flex-col space-y-2 p-2">
+                        <div className="flex items-center space-x-2 p-1">
+                          <Checkbox
+                            className="m-1 mt-3 mr-0"
+                            id={`disciplina-3-${i}-${j}`}
+                            name={`disciplina-3-${i}-${j}`}
+                          />
+                          <Label className="m-1">Outro</Label>
+                        </div>
+                        <Input
+                          className="m-1"
+                          type="number"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 
   const renderNoSecondaryBackbone = () => (
     <div className="bg-slate-100 p-2 rounded-[10px] mt-4">
       <div className="flex flex-wrap justify-center">
-        <div className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2">
+        <div className="w-full px-2">
           <Label className="p-2 text-lg block">Qual a altura de cada andar? (em metros)</Label>
           <Input min={1} max={10} className="w-full grow" type="number" />
         </div>
-        <div className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2">
+        <div className="w-full px-2 mt-2">
           <Label className="p-2 text-lg block">Qual o número de pavimentos do prédio?</Label>
           <Input
             min={1}
