@@ -10,6 +10,8 @@ import { Table,
          TableHead,
          TableBody,
          TableCell } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+
 
 const Home: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState('');
@@ -148,7 +150,7 @@ const Home: React.FC = () => {
                             id={`disciplina-3-${i}-${j}`}
                             name={`disciplina-3-${i}-${j}`}
                           />
-                          <Label className="m-1">Outro</Label>
+                          <Label className="m-1">CFTV</Label>
                         </div>
                         <Input
                           className="m-1"
@@ -233,7 +235,7 @@ const Home: React.FC = () => {
                     id={`disciplina-3-${i}`}
                     name={`disciplina-3-${i}`}
                   />
-                  <Label className="m-1">Outro</Label>
+                  <Label className="m-1">CFTV</Label>
                 </div>
                 <Input
                   className="m-1"
@@ -281,6 +283,18 @@ const Home: React.FC = () => {
       {selectedOption === 'opcao-sim' && renderSecondaryBackbone()}
       {selectedOption === 'opcao-nao' && renderNoSecondaryBackbone()}
       {renderTable()}
+      <h2 className="text-2xl font-bold m-4">Contribuidores</h2>
+      <div className="flex justify-between">
+        <a href="https://github.com/MatheusViniciusV" target="_blank" rel="noopener noreferrer">
+          <Button variant="link">@MatheusViniciusV</Button>
+        </a>
+        <a href="https://github.com/El0y-C0SM0" target="_blank" rel="noopener noreferrer">
+          <Button variant="link">@El0y-C0SM0</Button>
+        </a>
+        <a href="https://github.com/VPom135" target="_blank" rel="noopener noreferrer">
+          <Button variant="link">@VPom135</Button>
+        </a>
+      </div>
     </main>
   );
 };
