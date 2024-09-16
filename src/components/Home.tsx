@@ -65,7 +65,7 @@ const Home: React.FC = () => {
     <div>
       <div className="bg-slate-100 p-2 rounded-[10px] mt-4">
         <div className="w-full px-2">
-          <Label className="p-2 text-lg">Qual o número de backbones secundários?</Label>
+          <Label className="p-2 text-lg">Qual o número de sala de equipamentos secundárias? (backbones secundários)</Label>
           <Input
             min={1}
             max={10}
