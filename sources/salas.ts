@@ -93,7 +93,7 @@ export class SalaDeTelecom {
     save(): void {
         if (this.comprimentoMalhaHorizontal > 90) {
             throw new DistanciaInvalidaError(
-                "Distancia dos pontos de telecom até a sala de telecom não deve exeder 100 metros"
+                "Distancia dos pontos de telecom até a sala de telecom não deve exeder 90 metros"
             );
         }
 
