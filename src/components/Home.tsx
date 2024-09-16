@@ -124,7 +124,7 @@ const Home: React.FC = () => {
                     id={`disciplina-3-${i}`}
                     name={`disciplina-3-${i}`}
                   />
-                  <Label className="m-1">Câmeras</Label>
+                  <Label className="m-1">Outro</Label>
                 </div>
                 <Input
                   className="m-1"
