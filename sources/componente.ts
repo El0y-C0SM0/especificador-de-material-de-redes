@@ -1,5 +1,5 @@
 import { TamanhoRackInvalidoError } from "./excecoes";
-import { TipoEquipamento, TipoUnidadeQuantidades, TipoComponenteRack, TipoMicelanea, TipoCaboUTP, TipoAcopladorPigtailCordao } from "./tipos";
+import { TipoEquipamentoRack, TipoUnidadeQuantidades, TipoComponenteRack, TipoMicelanea, TipoCaboUTP, TipoAcopladorPigtailCordao } from "./tipos";
 
 export class Componente<E> {
     quantidade: number;
@@ -23,10 +23,10 @@ class ItemRack {
     }
 }
 
-export class Equipamento extends ItemRack {
-    tipo: TipoEquipamento;
+export class EquipamentoRack extends ItemRack {
+    tipo: TipoEquipamentoRack;
 
-    constructor(tipo:TipoEquipamento, quantidade: number, alturaUnitaria: number) {
+    constructor(tipo:TipoEquipamentoRack, quantidade: number, alturaUnitaria: number) {
         super(quantidade, alturaUnitaria);
         this.tipo = tipo;
     }
@@ -43,20 +43,20 @@ export class ComponenteRack extends ItemRack {
 
 export class Rack {
     static tamanhoMaximo = 48;
-    equipamentos: Map<TipoEquipamento, Equipamento>;
+    equipamentos: Map<TipoEquipamentoRack, EquipamentoRack>;
     componentes: Map<TipoComponenteRack, ComponenteRack>
     jumperCables?: Componente<TipoCaboUTP>;
     micelaneas: Map<TipoMicelanea, Componente<TipoMicelanea>>;
     aberto: boolean;
 
-    constructor(equipamentosAtivos: Map<TipoEquipamento, Equipamento>, aberto: boolean = false) {
-        this.equipamentos = new Map<TipoEquipamento, Equipamento>(
+    constructor(equipamentosAtivos: Map<TipoEquipamentoRack, EquipamentoRack>, aberto: boolean = false) {
+        this.equipamentos = new Map<TipoEquipamentoRack, EquipamentoRack>(
             [...equipamentosAtivos]
         );
 
         if (aberto) equipamentosAtivos.set(
-            TipoEquipamento.EXAUSTOR,
-            new Equipamento(TipoEquipamento.EXAUSTOR, 1, 1)
+            TipoEquipamentoRack.EXAUSTOR,
+            new EquipamentoRack(TipoEquipamentoRack.EXAUSTOR, 1, 1)
         );
 
         this.componentes.set(
@@ -77,7 +77,7 @@ export class Rack {
             )
         );
 
-        let quantidadeDIO = this.equipamentos.get(TipoEquipamento.DIO_24)?.quantidade ?? 0;
+        let quantidadeDIO = this.equipamentos.get(TipoEquipamentoRack.DIO_24)?.quantidade ?? 0;
 
         this.componentes.set(
             TipoComponenteRack.BANDEJA_DE_EMENDA_12,
@@ -89,13 +89,13 @@ export class Rack {
         );
         
         let quantidadeSwitches = 0;
-        if (this.equipamentos.get(TipoEquipamento.SWITCH_24) != undefined) {
-            quantidadeSwitches = this.equipamentos.get(TipoEquipamento.SWITCH_24)?.quantidade ?? 0;
+        if (this.equipamentos.get(TipoEquipamentoRack.SWITCH_24) != undefined) {
+            quantidadeSwitches = this.equipamentos.get(TipoEquipamentoRack.SWITCH_24)?.quantidade ?? 0;
 
             this.equipamentos.set(
-                TipoEquipamento.PATCH_PANEL_24,
-                new  Equipamento(
-                    TipoEquipamento.PATCH_PANEL_24,
+                TipoEquipamentoRack.PATCH_PANEL_24,
+                new  EquipamentoRack(
+                    TipoEquipamentoRack.PATCH_PANEL_24,
                     quantidadeSwitches,
                     1
                 )

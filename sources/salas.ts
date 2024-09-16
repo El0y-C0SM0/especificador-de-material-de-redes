@@ -1,4 +1,4 @@
-import { Componente, Equipamento, Rack } from "./componente";
+import { Componente, EquipamentoRack, Rack } from "./componente";
 import * as Tipos from './tipos';
 import { DistanciaInvalidaError, } from "./excecoes";
 
@@ -61,13 +61,13 @@ export class SalaDeTelecom {
     pigtails: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
     cordoes: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
     acopladores: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>; 
-    equipamentosAtivos: Map<Tipos.TipoEquipamento, Equipamento>;
-    micelaneas?: Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>;
+    micelaneas: Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>;
     // É tanto as fibras que redebem da SEQ primária quanto do provedor.
     fibrasOpticasRecebidas: Componente<Tipos.TipoFibraOptica>; 
     areaDeTrabalho: AreaDeTrabalho;
     comprimentoMalhaHorizontal: number;
     numeroPiso: number;
+    protected equipamentosAtivos: Map<Tipos.TipoEquipamentoRack, EquipamentoRack>;
 
     constructor(
         areaDeTrabalho: AreaDeTrabalho, 
@@ -80,7 +80,7 @@ export class SalaDeTelecom {
 
         if (comprimentoMalhaHorizontal > 90) {
             throw new DistanciaInvalidaError(
-                "Distancia dos pontos de telecom até a sala de telecom não deve exeder 100 metros"
+                "Distancia dos pontos de telecom até a sala de telecom não deve exeder 90 metros"
             );
         }
             
@@ -100,9 +100,9 @@ export class SalaDeTelecom {
         this.defineAtivos();
     }
 
-    defineAtivos(): void {
-        this.equipamentosAtivos.set(Tipos.TipoEquipamento.SWITCH_24, new Equipamento(
-            Tipos.TipoEquipamento.SWITCH_24, 
+    protected defineAtivos(): void {
+        this.equipamentosAtivos.set(Tipos.TipoEquipamentoRack.SWITCH_24, new EquipamentoRack(
+            Tipos.TipoEquipamentoRack.SWITCH_24, 
             Math.ceil(this.areaDeTrabalho.numeroConectores / 24),
             1
         ));
@@ -111,8 +111,8 @@ export class SalaDeTelecom {
         let quantidadeAcopladores: number;
 
         if(this.numeroFibras <= 8) {
-            this.equipamentos.set(Tipos.TipoEquipamento.TERMINADOR_OPTICO, new Equipamento(
-                Tipos.TipoEquipamento.TERMINADOR_OPTICO, 
+            this.equipamentos.set(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO, new EquipamentoRack(
+                Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO, 
                 1, 
                 0, 
             ));
@@ -124,8 +124,8 @@ export class SalaDeTelecom {
             quantidadeAcopladores = this.numeroFibras / 2;
 
         } else {
-            this.equipamentos.set(Tipos.TipoEquipamento.DIO_24, new Equipamento(
-                Tipos.TipoEquipamento.DIO_24, 
+            this.equipamentos.set(Tipos.TipoEquipamentoRack.DIO_24, new EquipamentoRack(
+                Tipos.TipoEquipamentoRack.DIO_24, 
                 Math.ceil(this.numeroFibras / 24), 
                 1,
             ));
@@ -140,7 +140,7 @@ export class SalaDeTelecom {
         this.defineAcopladores(tipoAcoplador, quantidadeAcopladores);
     }
 
-    defineAcopladores(
+    protected defineAcopladores(
         tipoAcoplador: Tipos.TipoAcopladorPigtailCordao, 
         quantidadeAcopladores: number,
     ): void {
@@ -183,7 +183,7 @@ export class SalaDeTelecom {
     }
 
     get jumperCables(): Componente<Tipos.TipoCaboUTP> | undefined {
-        let quantidadeSwitches = this.equipamentosAtivos.get(Tipos.TipoEquipamento.SWITCH_24)?.quantidade;
+        let quantidadeSwitches = this.equipamentosAtivos.get(Tipos.TipoEquipamentoRack.SWITCH_24)?.quantidade;
 
         if (quantidadeSwitches == undefined) return undefined;
 
@@ -197,8 +197,8 @@ export class SalaDeTelecom {
         );
     }
 
-    get equipamentos() : Map<Tipos.TipoEquipamento, Equipamento> {
-        let equipamentos = new Map<Tipos.TipoEquipamento, Equipamento>();
+    get equipamentos() : Map<Tipos.TipoEquipamentoRack, EquipamentoRack> {
+        let equipamentos = new Map<Tipos.TipoEquipamentoRack, EquipamentoRack>();
 
         this.racks.forEach(rack => {
             rack.equipamentos.forEach(equipamento =>{
@@ -255,13 +255,13 @@ export class SalaDeTelecom {
 
             const fracao = Rack.arredondaAltura(error.altura / k);
             let cont = fracao;
-            let selecionados = new Map<Tipos.TipoEquipamento, Equipamento>();
+            let selecionados = new Map<Tipos.TipoEquipamentoRack, EquipamentoRack>();
 
             this.equipamentosAtivos.forEach(equipamento => {
                 if(cont - equipamento.quantidade < 0) {
                     selecionados.set(
                         equipamento.tipo,
-                        new Equipamento(
+                        new EquipamentoRack(
                             equipamento.tipo,
                             cont,
                             equipamento.alturaUnitaria
@@ -273,7 +273,7 @@ export class SalaDeTelecom {
 
                     selecionados.set(
                         equipamento.tipo,
-                        new Equipamento(
+                        new EquipamentoRack(
                             equipamento.tipo,
                             -(cont - equipamento.quantidade),
                             equipamento.alturaUnitaria
@@ -292,10 +292,10 @@ export class SalaDeTelecom {
     }
 }
 
-export class SalaDeEquipamentos extends SalaDeTelecom {
+export class SalaDeEquipamentoRacks extends SalaDeTelecom {
     salasDeTelecom: SalaDeTelecom[];
     // SEQ secundarias
-    salasDeEquipamentos: SalaDeEquipamentos[];
+    salasDeEquipamentoRacks: SalaDeEquipamentoRacks[];
     peDireitoAndares: number;
     // distancia que essa seq está da principal.
     distanciaSEQ: number;
@@ -305,7 +305,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
         comprimentoMalhaHorizontal: number, 
         numeroPiso: number, 
         salasDeTelecom: SalaDeTelecom[],
-        salasDeEquipamentos: SalaDeEquipamentos[] = [], 
+        salasDeEquipamentoRacks: SalaDeEquipamentoRacks[] = [], 
         distanciaSEQ: number = 0, 
         rackAberto: boolean = false,
         quantidadeFibrasRecebidas: number = 12,
@@ -313,7 +313,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     ) {
         super(areaDeTrabalho, comprimentoMalhaHorizontal, numeroPiso, rackAberto=rackAberto);
         this.salasDeTelecom = salasDeTelecom;
-        this.salasDeEquipamentos = salasDeEquipamentos;
+        this.salasDeEquipamentoRacks = salasDeEquipamentoRacks;
         this.distanciaSEQ = distanciaSEQ;
 
         this.defineFibrasOpticas(quantidadeFibrasRecebidas, tipoFibrasRecebidas);
@@ -332,7 +332,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     get tipoFibra(): Tipos.TipoFibraOptica {
         let maiorFibra = 0;
 
-        if(this.salasDeEquipamentos.length == 0) {
+        if(this.salasDeEquipamentoRacks.length == 0) {
             let sortedSalasDeTelecom = this.salasDeTelecom.slice().sort((a, b) => {
                 return a.numeroPiso - b.numeroPiso;
             });
@@ -340,10 +340,10 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
             maiorFibra = Math.max(...sortedSalasDeTelecom.map(sala => {
                 return Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.peDireitoAndares; 
             }));
-        } else if (this.salasDeEquipamentos.length != 0) {
-            let sortedSalasDeEquipamentos = this.salasDeEquipamentos.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
+        } else if (this.salasDeEquipamentoRacks.length != 0) {
+            let sortedSalasDeEquipamentoRacks = this.salasDeEquipamentoRacks.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
 
-            maiorFibra = Math.max(...sortedSalasDeEquipamentos.map(sala => sala.distanciaSEQ));
+            maiorFibra = Math.max(...sortedSalasDeEquipamentoRacks.map(sala => sala.distanciaSEQ));
         }
 
         return Tipos.TipoFibraOptica.getTipoFibra(maiorFibra);
@@ -356,7 +356,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
             sala.diciplinas.forEach(diciplina => diciplinas.add(diciplina));
         });
 
-        this.salasDeEquipamentos.forEach(sala => {
+        this.salasDeEquipamentoRacks.forEach(sala => {
             sala.diciplinas.forEach(diciplina => diciplinas.add(diciplina));
         });
 
@@ -368,7 +368,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
         let numeroFibras = 0;
 
         this.salasDeTelecom.forEach(sala => numeroFibras += sala.numeroFibras);
-        this.salasDeEquipamentos.forEach(sala => numeroFibras += sala.numeroFibras);
+        this.salasDeEquipamentoRacks.forEach(sala => numeroFibras += sala.numeroFibras);
         numeroFibras += super.numeroFibras;
 
         return numeroFibras;
@@ -385,20 +385,20 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
             distancia += Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.peDireitoAndares; 
         });
 
-        let sortedSalasDeEquipamentos = this.salasDeEquipamentos.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
+        let sortedSalasDeEquipamentoRacks = this.salasDeEquipamentoRacks.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
 
-        sortedSalasDeEquipamentos.forEach(sala => distancia += sala.distanciaSEQ);
+        sortedSalasDeEquipamentoRacks.forEach(sala => distancia += sala.distanciaSEQ);
 
         return new Componente<Tipos.TipoFibraOptica>(distancia, Tipos.TipoUnidadeQuantidades.METRO, this.tipoFibra);
     }
     
-    defineAtivos(): void {
+    protected defineAtivos(): void {
         super.defineAtivos();
 
         this.salasDeTelecom.forEach(sala => sala.diciplinas.has(Tipos.TipoPontoTelecom.CFTV));
 
-        if (this.equipamentos.get(Tipos.TipoEquipamento.TERMINADOR_OPTICO) != undefined) {
-            this.equipamentos.delete(Tipos.TipoEquipamento.TERMINADOR_OPTICO);
+        if (this.equipamentos.get(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO) != undefined) {
+            this.equipamentos.delete(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO);
         }
 
         if (this.diciplinas.has(Tipos.TipoPontoTelecom.CFTV)) {
@@ -409,20 +409,20 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
                     quantidadeFibrasCFTV += 2;
             });
 
-            this.salasDeEquipamentos.forEach(sala => {
+            this.salasDeEquipamentoRacks.forEach(sala => {
                 if (sala.diciplinas.has(Tipos.TipoPontoTelecom.CFTV))
                     quantidadeFibrasCFTV += 1;
             });
 
-            this.equipamentosAtivos.set(Tipos.TipoEquipamento.SVR_24, new Equipamento(
-                Tipos.TipoEquipamento.SVR_24,
+            this.equipamentosAtivos.set(Tipos.TipoEquipamentoRack.SVR_24, new EquipamentoRack(
+                Tipos.TipoEquipamentoRack.SVR_24,
                 Math.ceil(quantidadeFibrasCFTV / 24),
                 2
             ))
         }
 
-        this.equipamentosAtivos.set(Tipos.TipoEquipamento.DIO_24_4, new Equipamento(
-            Tipos.TipoEquipamento.DIO_24, 
+        this.equipamentosAtivos.set(Tipos.TipoEquipamentoRack.DIO_24_4, new EquipamentoRack(
+            Tipos.TipoEquipamentoRack.DIO_24, 
             Math.ceil(this.numeroFibras / 24), 
             1,
         ));
@@ -431,8 +431,8 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
 
         this.defineAcopladores(tipoAcoplador, this.numeroFibras);
         
-        this.equipamentosAtivos.set(Tipos.TipoEquipamento.DIO_24_4, new Equipamento(
-            Tipos.TipoEquipamento.DIO_24_4, 
+        this.equipamentosAtivos.set(Tipos.TipoEquipamentoRack.DIO_24_4, new EquipamentoRack(
+            Tipos.TipoEquipamentoRack.DIO_24_4, 
             // mais 1 para receber as fibras da entrada de facilidade separado.
             Math.ceil(this.numeroFibras / 24) + 1, 
             1,
@@ -446,7 +446,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
         this.defineAcopladores(tipoAcoplador, this.fibrasOpticasRecebidas.quantidade);
     }
 
-    defineFibrasOpticas(
+    protected defineFibrasOpticas(
         quantidadeFibrasRecebidas: number = 12,
         tipoFibraRecebida: Tipos.TipoFibraOptica = Tipos.TipoFibraOptica.FOSM_9_125
     ): void {
@@ -459,7 +459,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
                 tipoFibra
         ));
 
-        this.salasDeEquipamentos.forEach(sala => sala.fibrasOpticasRecebidas =
+        this.salasDeEquipamentoRacks.forEach(sala => sala.fibrasOpticasRecebidas =
             new Componente<Tipos.TipoFibraOptica>(
                 sala.numeroFibras, 
                 Tipos.TipoUnidadeQuantidades.UNIDADE, 

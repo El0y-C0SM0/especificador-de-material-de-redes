@@ -57,7 +57,7 @@ export class TipoAcopladorPigtailCordao {
     }
 }
 
-export enum TipoEquipamento {
+export enum TipoEquipamentoRack {
     PATCH_PANEL_24,
     PATCH_PANEL,
     SWITCH_24,
