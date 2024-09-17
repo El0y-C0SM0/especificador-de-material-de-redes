@@ -11,9 +11,9 @@ export enum TipoConector {
 };
 
 export class TipoPontoTelecom {
-    static REDE = 0;
-    static CFTV = 1;
-    static VOIP = 2;
+    static REDE = "Rede";
+    static CFTV = "CFTV";
+    static VOIP = "VoIP";
 
     static toTipoPatchCord(tipoPonto: TipoPontoTelecom): TipoCaboUTP {
         switch (tipoPonto) {

@@ -9,8 +9,9 @@ export class AreaDeTrabalho {
     private _pontosTelecom!: Map<Tipos.TipoPontoTelecom, Componente<Tipos.TipoPontoTelecom>>;
 
     constructor(pontosTelecom: Map<Tipos.TipoPontoTelecom, Componente<Tipos.TipoPontoTelecom>>) {
-        this.pontosTelecom = pontosTelecom;
+        this.micelaneas = new Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>();
         this.patchCords = new Map<Tipos.TipoCaboUTP, Componente<Tipos.TipoCaboUTP>>();        
+        this.pontosTelecom = pontosTelecom;
     }
 
     get pontosTelecom(): Map<Tipos.TipoPontoTelecom, Componente<Tipos.TipoPontoTelecom>> {

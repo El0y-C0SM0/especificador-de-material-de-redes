@@ -44,10 +44,10 @@ export class ComponenteRack extends ItemRack {
 export class Rack {
     static tamanhoMaximo = 48;
     equipamentos: Map<TipoEquipamentoRack, EquipamentoRack>;
-    componentes: Map<TipoComponenteRack, ComponenteRack>
+    componentes!: Map<TipoComponenteRack, ComponenteRack>;
     jumperCables?: Componente<TipoCaboUTP>;
-    micelaneas: Map<TipoMicelanea, Componente<TipoMicelanea>>;
-    aberto: boolean;
+    micelaneas!: Map<TipoMicelanea, Componente<TipoMicelanea>>;
+    aberto!: boolean;
 
     constructor(equipamentosAtivos: Map<TipoEquipamentoRack, EquipamentoRack>, aberto: boolean = false) {
         this.equipamentos = new Map<TipoEquipamentoRack, EquipamentoRack>(

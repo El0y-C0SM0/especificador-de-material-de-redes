@@ -3,14 +3,14 @@ import * as Tipos from './tipos';
 import { DistanciaInvalidaError, } from "./excecoes";
 
 export class AreaDeTrabalho {
-    tomadasFemeas: Componente<Tipos.TipoConector> | null;
+    tomadasFemeas!: Componente<Tipos.TipoConector> | null;
     patchCords: Map<Tipos.TipoCaboUTP, Componente<Tipos.TipoCaboUTP>>;
-    micelaneas: Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>;
-    private _pontosTelecom: Map<Tipos.TipoPontoTelecom, Componente<Tipos.TipoPontoTelecom>>;
+    micelaneas!: Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>;
+    private _pontosTelecom!: Map<Tipos.TipoPontoTelecom, Componente<Tipos.TipoPontoTelecom>>;
 
     constructor(pontosTelecom: Map<Tipos.TipoPontoTelecom, Componente<Tipos.TipoPontoTelecom>>) {
-        this.pontosTelecom = pontosTelecom;
         this.patchCords = new Map<Tipos.TipoCaboUTP, Componente<Tipos.TipoCaboUTP>>();        
+        this.pontosTelecom = pontosTelecom;
     }
 
     get pontosTelecom(): Map<Tipos.TipoPontoTelecom, Componente<Tipos.TipoPontoTelecom>> {
@@ -58,16 +58,16 @@ export class AreaDeTrabalho {
 export class SalaDeTelecom {
     rackAberto: boolean;
     // Pigtails são duplos nos TO e simples no DIO
-    pigtails: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
-    cordoes: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
-    acopladores: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>; 
-    micelaneas: Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>;
+    pigtails!: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
+    cordoes!: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
+    acopladores!: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>; 
+    micelaneas!: Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>;
     // É tanto as fibras que redebem da SEQ primária quanto do provedor.
-    fibrasOpticasRecebidas: Componente<Tipos.TipoFibraOptica>; 
+    fibrasOpticasRecebidas!: Componente<Tipos.TipoFibraOptica>; 
     areaDeTrabalho: AreaDeTrabalho;
     comprimentoMalhaHorizontal: number;
     numeroPiso: number;
-    protected equipamentosAtivos: Map<Tipos.TipoEquipamentoRack, EquipamentoRack>;
+    protected equipamentosAtivos!: Map<Tipos.TipoEquipamentoRack, EquipamentoRack>;
 
     constructor(
         areaDeTrabalho: AreaDeTrabalho, 
@@ -296,7 +296,7 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
     salasDeTelecom: SalaDeTelecom[];
     // SEQ secundarias
     salasDeEquipamento: SalaDeEquipamentoRacks[];
-    peDireitoAndares: number;
+    peDireitoAndares!: number;
     // distancia que essa seq está da principal.
     distanciaSEQ: number;
 

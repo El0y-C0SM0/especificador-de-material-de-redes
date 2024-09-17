@@ -11,6 +11,10 @@ import { Table,
          TableBody,
          TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import * as tps from '../models/tipos';
+import { Componente } from '@/models/componente';
+import { UndoIcon } from 'lucide-react';
+import { AreaDeTrabalho } from '@/models/salas';
 
 
 const Home: React.FC = () => {
@@ -18,6 +22,8 @@ const Home: React.FC = () => {
   const [numPavimentos, setNumPavimentos] = useState(0);
   const [numBackbones, setNumBackbones] = useState(0);
   const [backbonePavimentos, setBackbonePavimentos] = useState<{ [key: number]: number }>({});
+  const [pontosTelecom, setPontosTelecom] = useState<{ [key: string]: Map<tps.TipoPontoTelecom, Componente<tps.TipoPontoTelecom>> }>({});
+  const [areasDeTrabalho, setAreasDeTrabalho] = useState<{ [key: string]: AreaDeTrabalho}>({});
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
@@ -30,10 +36,45 @@ const Home: React.FC = () => {
   const handleNumBackbonesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNumBackbones(parseInt(e.target.value, 10));
   };
-
+  
   const handleBackbonePavimentosChange = (backboneIndex: number, pavimentos: number) => {
     setBackbonePavimentos((prevPavimentos) => ({ ...prevPavimentos, [backboneIndex]: pavimentos }));
   };
+  
+  const handlePontoRedeChange = (backboneIndex: number = 0, pavimentoIndex: number, quantidade: number, tipo: tps.TipoPontoTelecom) => {
+    const componente = new Componente<tps.TipoPontoTelecom>(quantidade, tps.TipoUnidadeQuantidades.UNIDADE, tipo);
+
+    let pavimento = pontosTelecom[`${backboneIndex},${pavimentoIndex}`];
+
+    if (pavimento === undefined) 
+      pavimento = new  Map<tps.TipoPontoTelecom, Componente<tps.TipoPontoTelecom>>();
+
+    pavimento.set(tipo, componente);
+    
+    setPontosTelecom((prevPavimentos) => ({
+      ...prevPavimentos,
+      [`${backboneIndex},${pavimentoIndex}`]: pavimento, 
+    }));
+  };
+
+  const saveAreaDeTrabalho = (backboneIndex: number = 0, pavimentoIndex: number) => {
+    let pavimento = pontosTelecom[`${backboneIndex},${pavimentoIndex}`];
+
+    if (pavimento !== undefined) {
+      const novaAreaDeTrabalho = new AreaDeTrabalho(pavimento);
+
+      setAreasDeTrabalho((preAreaDeTrabalho) => ({
+        ...preAreaDeTrabalho,
+        [`${backboneIndex},${pavimentoIndex}`]: novaAreaDeTrabalho,
+      }));
+
+      console.log(novaAreaDeTrabalho.numeroConectores);
+    }
+  }
+
+  const saveSalaTelecom = (backboneIndex: number = 0, pavimentoIndex: number) => {
+
+  }
 
   const renderRadioGroup = () => (
     <div>
@@ -116,45 +157,39 @@ const Home: React.FC = () => {
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                       <div className="flex flex-col space-y-2 p-2">
-                        <div className="flex items-center space-x-2 p-1">
-                          <Checkbox
-                            className="m-1 mt-3 mr-0"
-                            id={`disciplina-1-${i}-${j}`}
-                            name={`disciplina-1-${i}-${j}`}
-                          />
-                          <Label className="m-1 mt-2">Dados</Label>
-                        </div>
+                        <Label className="m-1 mt-2">Dados</Label>
                         <Input
                           className="m-1"
                           type="number"
+                          onChange={(e) => {
+                            const quantidade = parseInt(e.target.value, 10);
+                            const tipo = tps.TipoPontoTelecom.REDE;
+                            handlePontoRedeChange(undefined, i, quantidade, tipo);
+                          }}
                         />
                       </div>
                       <div className="flex flex-col space-y-2 p-2">
-                        <div className="flex items-center space-x-2 p-1">
-                          <Checkbox
-                            className="m-1 mt-3 mr-0"
-                            id={`disciplina-2-${i}-${j}`}
-                            name={`disciplina-2-${i}-${j}`}
-                          />
-                          <Label className="m-1">VoIP</Label>
-                        </div>
+                        <Label className="m-1">VoIP</Label>
                         <Input
                           className="m-1"
                           type="number"
+                          onChange={(e) => {
+                            const quantidade = parseInt(e.target.value, 10);
+                            const tipo = tps.TipoPontoTelecom.CFTV;
+                            handlePontoRedeChange(undefined, i, quantidade, tipo);
+                          }}
                         />
                       </div>
                       <div className="flex flex-col space-y-2 p-2">
-                        <div className="flex items-center space-x-2 p-1">
-                          <Checkbox
-                            className="m-1 mt-3 mr-0"
-                            id={`disciplina-3-${i}-${j}`}
-                            name={`disciplina-3-${i}-${j}`}
-                          />
-                          <Label className="m-1">CFTV</Label>
-                        </div>
+                        <Label className="m-1">VoIP</Label>
                         <Input
                           className="m-1"
                           type="number"
+                          onChange={(e) => {
+                            const quantidade = parseInt(e.target.value, 10);
+                            const tipo = tps.TipoPontoTelecom.CFTV;
+                            handlePontoRedeChange(i, j, quantidade, tipo);
+                          }}
                         />
                       </div>
                     </div>
@@ -190,6 +225,14 @@ const Home: React.FC = () => {
       </div>
       {Array.from({ length: numPavimentos }, (_, i) => (
         <div key={i} className="bg-slate-100 p-2 rounded-[10px] mt-4">
+        <div className='bg-slate-100 p-2 rounded-[10px] mt-4'>
+          <Checkbox
+              className="m-1 mt-3 mr-0"
+              id={`rack-aberto-${i}-${j}`}
+              name={`disciplina-1-${i}-${j}`}
+            />
+            <Label className="p-1 text-lg block">Rack aberto</Label>
+        </div>
           <div className="bg-slate-200 p-2 rounded-[10px]">
             <div>
               <Label className="p-1 text-lg block">Pavimento {i + 1}</Label>
@@ -201,45 +244,42 @@ const Home: React.FC = () => {
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="flex flex-col space-y-2 p-2">
-                <div className="flex items-center space-x-2 p-1">
-                  <Checkbox
-                    className="m-1 mt-3 mr-0"
-                    id={`disciplina-1-${i}`}
-                    name={`disciplina-1-${i}`}
-                  />
-                  <Label className="m-1 mt-2">Dados</Label>
-                </div>
+                <Label className="m-1 mt-2">Dados</Label>
                 <Input
                   className="m-1"
                   type="number"
+                  onChange={(e) => {
+                    const quantidade = parseInt(e.target.value, 10);
+                    const tipo = tps.TipoPontoTelecom.REDE;
+                    handlePontoRedeChange(undefined, i, quantidade, tipo);
+                    saveAreaDeTrabalho(undefined, i);
+                  }}
                 />
               </div>
               <div className="flex flex-col space-y-2 p-2">
-                <div className="flex items-center space-x-2 p-1">
-                  <Checkbox
-                    className="m-1 mt-3 mr-0"
-                    id={`disciplina-2-${i}`}
-                    name={`disciplina-2-${i}`}
-                  />
-                  <Label className="m-1">VoIP</Label>
-                </div>
+                <Label className="m-1">VoIP</Label>
                 <Input
                   className="m-1"
                   type="number"
+                  onChange={(e) => {
+                    const quantidade = parseInt(e.target.value, 10);
+                    const tipo = tps.TipoPontoTelecom.CFTV;
+                    handlePontoRedeChange(undefined, i, quantidade, tipo);
+                    saveAreaDeTrabalho(undefined, i);
+                  }}
                 />
               </div>
               <div className="flex flex-col space-y-2 p-2">
-                <div className="flex items-center space-x-2 p-1">
-                  <Checkbox
-                    className="m-1 mt-3 mr-0"
-                    id={`disciplina-3-${i}`}
-                    name={`disciplina-3-${i}`}
-                  />
-                  <Label className="m-1">CFTV</Label>
-                </div>
+                <Label className="m-1">CFTV</Label>
                 <Input
                   className="m-1"
                   type="number"
+                  onChange={(e) => {
+                    const quantidade = parseInt(e.target.value, 10);
+                    const tipo = tps.TipoPontoTelecom.VOIP;
+                    handlePontoRedeChange(undefined, i, quantidade, tipo);
+                    saveAreaDeTrabalho(undefined, i);
+                  }}
                 />
               </div>
             </div>
