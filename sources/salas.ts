@@ -292,10 +292,10 @@ export class SalaDeTelecom {
     }
 }
 
-export class SalaDeEquipamentoRacks extends SalaDeTelecom {
+export class SalaDeEquipamentos extends SalaDeTelecom {
     salasDeTelecom: SalaDeTelecom[];
     // SEQ secundarias
-    salasDeEquipamento: SalaDeEquipamentoRacks[];
+    salasDeEquipamento: SalaDeEquipamentos[];
     peDireitoAndares!: number;
     // distancia que essa seq está da principal.
     distanciaSEQ: number;
@@ -305,7 +305,7 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
         comprimentoMalhaHorizontal: number, 
         numeroPiso: number, 
         salasDeTelecom: SalaDeTelecom[],
-        salasDeEquipamento: SalaDeEquipamentoRacks[] = [], 
+        salasDeEquipamento: SalaDeEquipamentos[] = [], 
         distanciaSEQ: number = 0, 
         rackAberto: boolean = false,
         quantidadeFibrasRecebidas: number = 12,
@@ -341,9 +341,9 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
                 return Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.peDireitoAndares; 
             }));
         } else if (this.salasDeEquipamento.length != 0) {
-            let sortedSalasDeEquipamentoRacks = this.salasDeEquipamento.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
+            let sortedSalaDeEquipamentos = this.salasDeEquipamento.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
 
-            maiorFibra = Math.max(...sortedSalasDeEquipamentoRacks.map(sala => sala.distanciaSEQ));
+            maiorFibra = Math.max(...sortedSalaDeEquipamentos.map(sala => sala.distanciaSEQ));
         }
 
         return Tipos.TipoFibraOptica.getTipoFibra(maiorFibra);
@@ -385,9 +385,9 @@ export class SalaDeEquipamentoRacks extends SalaDeTelecom {
             distancia += Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.peDireitoAndares; 
         });
 
-        let sortedSalasDeEquipamentoRacks = this.salasDeEquipamento.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
+        let sortedSalaDeEquipamentos = this.salasDeEquipamento.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
 
-        sortedSalasDeEquipamentoRacks.forEach(sala => distancia += sala.distanciaSEQ);
+        sortedSalaDeEquipamentos.forEach(sala => distancia += sala.distanciaSEQ);
 
         return new Componente<Tipos.TipoFibraOptica>(distancia, Tipos.TipoUnidadeQuantidades.METRO, this.tipoFibra);
     }

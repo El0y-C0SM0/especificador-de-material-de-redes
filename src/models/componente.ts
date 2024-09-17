@@ -59,6 +59,9 @@ export class Rack {
             new EquipamentoRack(TipoEquipamentoRack.EXAUSTOR, 1, 1)
         );
 
+        this.componentes = new Map<TipoComponenteRack, ComponenteRack>();
+        this.micelaneas = new Map<TipoMicelanea, Componente<TipoMicelanea>>();
+
         this.componentes.set(
             TipoComponenteRack.BANDEJA_DESLIZANTE,
             new ComponenteRack(
