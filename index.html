@@ -1,14 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vite + React + TypeScript</title>
-  <script type="module" crossorigin src="/especificador-de-material-de-redes/assets/index-ab3243a2.js"></script>
-  <link rel="stylesheet" href="/especificador-de-material-de-redes/assets/index-e2a4edd7.css">
-</head>
-<body>
-  <div id="root"></div>
-  
-</body>
-</html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantificação de material de Rede</title>
+    <script type="module" crossorigin src="/assets/index-e7a198f8.js"></script>
+  </head>
+  <body>
+    <main id="root">
+      <div>
+        <h2 class="p-2 text-lg">Haverão salas de equipamentos secundárias?</h2>
+        <div class="p-2">
+          <div class="flex items-center space-x-2 p-2">
+            <input 
+            type="radio" 
+            value="opcao-nao" 
+            id="opcao-nao" 
+            />
+            <label for="opcao-nao">Não terá sala de equipamentos secundária.</label>
+          </div>
+          <div class="flex items-center space-x-2 p-2">
+            <input 
+            type="radio" 
+            value="opcao-sim" 
+            id="opcao-sim" 
+            />
+            <label for="opcao-sim">Terá sala de equipamentos secundária.</label>
+          </div>
+        </div>
+      </div>
+      <button id="gerar-tabela-btn">Gerar tabela</button>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    
+    
+    
+    
+    
+    
+    
+  </body>
+  </html>
