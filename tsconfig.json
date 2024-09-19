@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "module": "AMD",    
+    "module": "ES6",    
     "jsx": "react-jsx", 
     "strict": true,
     "skipLibCheck": true,
@@ -9,15 +9,14 @@
     "outDir": "./src/models",
     "sourceMap": true,
     "noImplicitAny": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node", 
+    "esModuleInterop": true, 
+    "allowSyntheticDefaultImports": true, 
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["models"]
+  "include": ["src/models-source/"]
 }
-  

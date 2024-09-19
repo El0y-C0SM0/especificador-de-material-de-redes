@@ -1,38 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quantificação de material de Rede</title>
-</head>
-<body>
-  <main id="root">
-    <div>
-      <h2 class="p-2 text-lg">Haverão salas de equipamentos secundárias?</h2>
-      <div class="p-2">
-        <div class="flex items-center space-x-2 p-2">
-          <input 
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantificação de material de Rede</title>
+  </head>
+  <body>
+    <main id="root">
+      <div>
+        <h2 class="p-2 text-lg">Haverão salas de equipamentos secundárias?</h2>
+        <div class="p-2">
+          <div class="flex items-center space-x-2 p-2">
+            <input 
             type="radio" 
             value="opcao-nao" 
             id="opcao-nao" 
-          />
-          <label for="opcao-nao">Não terá sala de equipamentos secundária.</label>
-        </div>
-        <div class="flex items-center space-x-2 p-2">
-          <input 
+            />
+            <label for="opcao-nao">Não terá sala de equipamentos secundária.</label>
+          </div>
+          <div class="flex items-center space-x-2 p-2">
+            <input 
             type="radio" 
             value="opcao-sim" 
             id="opcao-sim" 
-          />
-          <label for="opcao-sim">Terá sala de equipamentos secundária.</label>
+            />
+            <label for="opcao-sim">Terá sala de equipamentos secundária.</label>
+          </div>
         </div>
       </div>
-    </div>
-    <input type="text" name="" id="meuInput">
-  </main>
-  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
-  <script  type="module" src="index.js" crossorigin="anonymous"></script>
-  <script type="module" src="src/forms/inputs.js" crossorigin="anonymous"></script>
-  <script type="module" src="src/forms/components.js" crossorigin="anonymous"></script>
-</body>
-</html>
+      <button id="gerar-tabela-btn">Gerar tabela</button>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script type="module" src="index.js" crossorigin="anonymous"></script>
+    <script type="module" src="src/models/tipos.js" crossorigin="anonymous"></script>
+    <script type="module" src="src/models/excecoes.js" crossorigin="anonymous"></script>
+    <script type="module" src="src/models/componente.js" crossorigin="anonymous"></script>
+    <script type="module" src="src/models/salas.js" crossorigin="anonymous"></script>
+    <script type="module" src="src/forms/inputs.js" crossorigin="anonymous"></script>
+    <script type="module" src="src/forms/components.js" crossorigin="anonymous"></script>
+  </body>
+  </html>
