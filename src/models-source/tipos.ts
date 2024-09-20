@@ -89,8 +89,8 @@ export enum TipoMicelanea {
 }
 
 export class TipoFibraOptica {
-    static FOMMIG_50_125 = 0;
-    static FOSM_9_125 = 1;
+    static FOMMIG_50_125 = "FOMMIG 50 x 125µm";
+    static FOSM_9_125 = "FOSM 9 x 125µm";
 
     static getTipoFibra(distancia: number) : TipoFibraOptica {
         if(distancia <= 300)

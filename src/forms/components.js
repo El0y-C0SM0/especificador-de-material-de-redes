@@ -1,4 +1,4 @@
-import { Checkbox, InputFloat, SelectField } from "./inputs.js";
+import { Checkbox, InputFloat, InputInt, SelectField } from "./inputs.js";
 import * as tps from "../models/tipos.js"
 import { Componente } from "../models/componente.js";
 import { AreaDeTrabalho, SalaDeTelecom } from "../models/salas.js";
@@ -10,14 +10,17 @@ export class PavimentoForm {
     pontoRedeInput;
     pontoCftvInput;
     pontoVoipInput;
+    id;
 
     constructor(numPavimento) {
         this.numPavimento = numPavimento;
+
         this.rackAbertoChecbox = new Checkbox(
             'Rack aberto:', 
             `rack-aberto-${numPavimento}`,
             false
         );
+
         this.malhaHorizontalInput = new InputFloat(
             "Comprimento da malha horizontal:",
             `malha-horizontal-${numPavimento}`,
@@ -27,6 +30,7 @@ export class PavimentoForm {
             false,
             undefined
         );
+
         this.pontoRedeInput = new InputFloat(
             "Pontos de rede:",
             `pontos-rede-${numPavimento}`,
@@ -36,6 +40,7 @@ export class PavimentoForm {
             false,
             undefined
         );
+
         this.pontoCftvInput = new InputFloat(
             "Pontos de CFTV:",
             `pontos-cftv-${numPavimento}`,
@@ -45,6 +50,7 @@ export class PavimentoForm {
             false,
             undefined
         );
+
         this.pontoVoipInput = new InputFloat(
             "Pontos de VoIP:",
             `pontos-voip-${numPavimento}`,
@@ -54,11 +60,13 @@ export class PavimentoForm {
             false,
             undefined
         );
+
+        this.id = `pavimento-${numPavimento}`
     }
 
     get html() {
         return `
-            <div class="pavimento">
+            <div id=${this.id} class="pavimento">
                 <h3>Pavimento ${this.numPavimento + 1}</h3>
                 ${this.rackAbertoChecbox.html}
                 ${this.malhaHorizontalInput.html}
@@ -69,6 +77,30 @@ export class PavimentoForm {
                 </div>
             </div>
         `
+    }
+
+    get $element() {
+        let $element = $(`
+            <div id=${this.id} class="pavimento">
+                <h3>Pavimento ${this.numPavimento + 1}</h3>
+            </div>
+        `);
+    
+        $element.append(this.rackAbertoChecbox.$element);
+        $element.append(this.malhaHorizontalInput.$element);
+    
+        let $pontoTelecomDiv = $(`
+            <div id="pontos-telecom-pavimento-${this.numPavimento}">
+            </div>
+        `);
+    
+        $pontoTelecomDiv.append(this.pontoRedeInput.$element);
+        $pontoTelecomDiv.append(this.pontoCftvInput.$element);
+        $pontoTelecomDiv.append(this.pontoVoipInput.$element);
+    
+        $element.append($pontoTelecomDiv);
+
+        return $element;
     }
 
     get isValid() {
@@ -142,11 +174,169 @@ export class PavimentoForm {
 }
 
 export class SalaDeEquipamentosForm {
+    // forms
     alturaAndarInput;
-    numeroPavimentoInput;
+    numeroPavimentosInput;
     pavimentoPrincipalInput;
-    numeroFibrasRecebidas;
+    numeroFibrasRecebidasInput;
     tipoFibraRecebidasSelectField;
 
+    // atributos
+    numeroSEQ;
+    id;
+    pavimentos;
+
+    constructor(numeroSEQ) {
+        this.numeroSEQ = numeroSEQ;
+        this.id = `seq-${numeroSEQ}`;
+        this.pavimentos = [new PavimentoForm(0)];
+
+        this.alturaAndarInput = new InputFloat(
+            "Altura dos andares:", 
+            "altura-andar-input", 
+            1,
+            10,
+            5,
+            false,
+            1
+        );
+
+        this.numeroFibrasRecebidasInput = new InputInt(
+            "Número de fibras recebidas:",
+            "numero-fibras-recebidas-input",
+            4,
+            24,
+            4,
+            false,
+            4
+        );
+        
+        this.tipoFibraRecebidasSelectField = new SelectField(
+            "Tipo de fibra recebida:",
+            {
+                [tps.TipoFibraOptica.FOMMIG_50_125]: "Fibra óptica Multimodo 50 x 125µm",
+                [tps.TipoFibraOptica.FOSM_9_125]: "Fibra óptica Monomodo 9 x 125µm"
+            },
+            "tipo-fibra-recebidas-select-field",
+            tps.TipoFibraOptica.FOSM_9_125
+        )
+
+        this.numeroPavimentosInput = new InputInt(
+            "Número de pavimentos:",
+            "numero-pavimentos-input",
+            1,
+            24,
+            1,
+            false,
+            undefined          
+        );
+
+        this.pavimentoPrincipalInput = new InputInt(
+            "Pavimento principal:",
+            "pavimento-principal-input",
+            1,
+            24,
+            1,
+            false,
+            1
+        );
     
+        this.numeroPavimentosInput.onUpdate(quantidadePavimentos => {
+            let $pavimentos = $(`#${this.id} .pavimento`);
+
+            while (this.pavimentos.length > quantidadePavimentos) {
+                this.pavimentos.pop();
+                $pavimentos.last().remove();
+            }
+
+            while (this.pavimentos.length < quantidadePavimentos) {
+                let novoPavimento = new PavimentoForm(this.pavimentos.length);
+                console.log(novoPavimento);
+
+                this.pavimentos.push(novoPavimento);
+                $(`#${this.id} .seq-pavimentos`).append($(novoPavimento.html));
+            }
+        });
+
+        $(`#numero-pavimentos-input`).on('change', () => {
+            console.log(`#${this.id}`);
+            if(this.isValid) callback(value);
+        });
+    }
+
+    get html() {
+        return `
+            <section id="${this.id}" class="seq">
+                <h2>Sala de equipamentos ${this.numeroSEQ > 0 ? this.numeroSEQ : ''}</h2>
+                <div class="seq-form">
+                    ${this.tipoFibraRecebidasSelectField.html}
+                    ${this.numeroFibrasRecebidasInput.html}
+                    ${this.alturaAndarInput.html}
+                    ${this.numeroPavimentosInput.html}
+                    ${this.pavimentoPrincipalInput.html}
+                </div>
+                <div class="seq-pavimentos">
+                    ${this.pavimentos.map(pavimento => pavimento.html).join('\n')}
+                </div>
+            </section>
+        `
+    }
+
+    get $element() {
+        let $section = $(`<section id="${this.id}" class="seq"></section>`);
+    
+        let $h2 = $(`<h2>Sala de equipamentos ${this.numeroSEQ > 0 ? this.numeroSEQ : ''}</h2>`);
+        $section.append($h2);
+    
+        let $seqFormDiv = $(`<div class="seq-form"></div>`);
+    
+        $seqFormDiv.append(this.tipoFibraRecebidasSelectField.$element);
+        $seqFormDiv.append(this.numeroFibrasRecebidasInput.$element);
+        $seqFormDiv.append(this.alturaAndarInput.$element);
+        $seqFormDiv.append(this.numeroPavimentosInput.$element);
+        $seqFormDiv.append(this.pavimentoPrincipalInput.$element);
+    
+        $section.append($seqFormDiv);
+    
+        let $seqPavimentosDiv = $(`<div class="seq-pavimentos"></div>`);
+    
+        this.pavimentos.forEach(pavimento => {
+            let $pavimentoDiv = $(`<div id="pavimento-${pavimento.numPavimento}"></div>`);
+    
+            let $h3 = $(`<h3>Pavimento ${pavimento.numPavimento + 1}</h3>`);
+            $pavimentoDiv.append($h3);
+    
+            let $pontoTelecomDiv = $(`<div id="ponto-telecom-pavimento-${pavimento.numPavimento}"></div>`);
+    
+            $pontoTelecomDiv.append(pavimento.pontoRedeInput.$element);
+            $pontoTelecomDiv.append(pavimento.pontoCftvInput.$element);
+            $pontoTelecomDiv.append(pavimento.pontoVoipInput.$element);
+    
+            $pavimentoDiv.append($pontoTelecomDiv);
+    
+            $seqPavimentosDiv.append($pavimentoDiv);
+        });
+    
+        $section.append($seqPavimentosDiv);
+    
+        return $section;
+    }
+
+    get isValid() {
+        let valid = true;
+
+        valid = valid && this.numeroFibrasRecebidasInput.isValid;
+        valid = valid && this.alturaAndarInput.isValid;
+        valid = valid && this.numeroPavimentosInput.isValid;
+        valid = valid && this.pavimentoPrincipalInput.isValid && (
+            this.pavimentoPrincipalInput.value <= this.numeroPavimentosInput.value
+        );
+        valid = valid && this.pavimentos.every(pavimento => pavimento.isValid);
+
+        return valid;
+    }
+
+    carregarSEQ() {
+        
+    }
 }

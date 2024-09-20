@@ -97,6 +97,6 @@ export class TipoFibraOptica {
         return TipoFibraOptica.FOSM_9_125;
     }
 }
-TipoFibraOptica.FOMMIG_50_125 = 0;
-TipoFibraOptica.FOSM_9_125 = 1;
+TipoFibraOptica.FOMMIG_50_125 = "FOMMIG 50 x 125µm";
+TipoFibraOptica.FOSM_9_125 = "FOSM 9 x 125µm";
 //# sourceMappingURL=tipos.js.map

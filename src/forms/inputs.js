@@ -8,6 +8,7 @@ class InputNumber {
   valueDefault;
   nullable;
   step;
+  $element;
 
   constructor(
     label,
@@ -25,6 +26,8 @@ class InputNumber {
     this.valueDefault = valueDefault;
     this.nullable = nullable;
     this.step = step;
+
+    this.$element = $(this.html);
   }
 
   get html() {
@@ -40,6 +43,12 @@ class InputNumber {
     } else {
       return true;
     }
+  }
+
+  onUpdate(callback) {
+    this.$element.on('change', () => {
+      if(this.isValid) callback(this.value);
+    });
   }
 
   get value() {}
@@ -61,11 +70,14 @@ export class Checkbox {
   label;
   id;
   valueDefault;
+  $element;
 
   constructor(label, id, valueDefault = false) {
     this.label = label;
     this.id = id;
     this.valueDefault = valueDefault;
+
+    this.$element = $(this.html);
   }
 
   get html() {
@@ -82,12 +94,15 @@ export class SelectField {
   itens;
   keyDefault;
   id;
+  $element
 
   constructor(label, itens, id, keyDefault = undefined) {
     this.label = label;
     this.itens = itens;
     this.id = id;
     this.keyDefault = keyDefault;
+
+    this.$element = $(this.html);
   }
 
   get html() {
