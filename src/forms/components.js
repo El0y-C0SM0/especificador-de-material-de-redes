@@ -66,7 +66,7 @@ export class PavimentoForm {
 
     get html() {
         return `
-            <div id=${this.id} class="pavimento">
+            <article id=${this.id} class="pavimento">
                 <h3>Pavimento ${this.numPavimento + 1}</h3>
                 ${this.rackAbertoChecbox.html}
                 ${this.malhaHorizontalInput.html}
@@ -75,7 +75,7 @@ export class PavimentoForm {
                     ${this.pontoCftvInput.html}
                     ${this.pontoVoipInput.html}
                 </div>
-            </div>
+            </article>
         `
     }
 
@@ -251,16 +251,10 @@ export class SalaDeEquipamentosForm {
 
             while (this.pavimentos.length < quantidadePavimentos) {
                 let novoPavimento = new PavimentoForm(this.pavimentos.length);
-                console.log(novoPavimento);
 
                 this.pavimentos.push(novoPavimento);
                 $(`#${this.id} .seq-pavimentos`).append($(novoPavimento.html));
             }
-        });
-
-        $(`#numero-pavimentos-input`).on('change', () => {
-            console.log(`#${this.id}`);
-            if(this.isValid) callback(value);
         });
     }
 
@@ -337,6 +331,6 @@ export class SalaDeEquipamentosForm {
     }
 
     carregarSEQ() {
-        
+
     }
 }

@@ -7,26 +7,21 @@
   </head>
   <body>
     <main id="root">
-      <div>
+      <div id="setup">
         <h2 class="p-2 text-lg">Haverão salas de equipamentos secundárias?</h2>
         <div class="p-2">
           <div class="flex items-center space-x-2 p-2">
-            <input 
-            type="radio" 
-            value="opcao-nao" 
-            id="opcao-nao" 
-            />
-            <label for="opcao-nao">Não terá sala de equipamentos secundária.</label>
+            <input type="radio" value="sem-seq-secundaria" id="sem-seq-secundaria" name="seq-secundaria" />
+            <label for="sem-seq-secundaria">Não terá sala de equipamentos secundária.</label>
           </div>
           <div class="flex items-center space-x-2 p-2">
-            <input 
-            type="radio" 
-            value="opcao-sim" 
-            id="opcao-sim" 
-            />
-            <label for="opcao-sim">Terá sala de equipamentos secundária.</label>
+            <input type="radio" value="com-seq-secundaria" id="com-seq-secundaria" name="seq-secundaria"/>
+            <label for="com-seq-secundaria">Terá sala de equipamentos secundária.</label>
           </div>
         </div>
+      </div>
+      <div id="formulario">
+
       </div>
       <button id="gerar-tabela-btn">Gerar tabela</button>
     </main>
