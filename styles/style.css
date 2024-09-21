@@ -1,0 +1,53 @@
+@import 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css';
+
+header {
+  @apply p-4 mb-4 mx-auto md:w-2/3;
+}
+
+header h1 {
+  @apply text-3xl font-bold;
+}
+
+header h2 {
+  @apply text-2xl font-bold mt-4;
+}
+
+#setup, #formulario {
+  @apply bg-slate-100 p-2 rounded-[10px] mx-3 mt-4;
+}
+
+#root {
+  @apply container w-full mx-auto flex flex-col md:w-2/3;
+}
+
+.seq .pavimento {
+  @apply mt-4 px-2;
+}
+
+.seq-form {
+  @apply p-1 px-4;
+}
+
+.seq h2 {
+  @apply p-1 px-4 text-lg font-bold;
+}
+
+.pavimento h2, .pavimento h3 {
+  @apply text-lg px-2 font-bold;
+}
+
+.seq-form {
+  @apply flex flex-wrap justify-center;
+}
+
+.input-group {
+  @apply w-full mt-2;
+}
+
+.input-group label {
+  @apply text-base block;
+}
+
+.input-group input {
+  @apply w-full grow;
+}

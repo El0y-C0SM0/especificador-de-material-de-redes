@@ -31,7 +31,14 @@ class InputNumber {
   }
 
   get html() {
-    return `<label>${this.label}<input id="${this.id}" type="number" min="${this.min}" max="${this.max}" step="${this.step}" value="${this.valueDefault}"></label>`;
+    return `
+      <div class="input-group">
+        <label id="${this.id}-label">
+          ${this.label}
+          <input id="${this.id}" type="number" min="${this.min}" max="${this.max}" step="${this.step}" value="${this.valueDefault}">
+        </label>
+      </div>
+    `;
   }
 
   get isValid() {
@@ -81,7 +88,14 @@ export class Checkbox {
   }
 
   get html() {
-    return `<label>${this.label}<input id='${this.id}' type="checkbox"></label>`;
+    return `
+      <div class="input-group">
+        <label id="${this.id}-label">
+          ${this.label}
+          <input id='${this.id}' type="checkbox">
+        </label>
+      </div>
+    `;
   }
 
   get value() {
@@ -115,7 +129,14 @@ export class SelectField {
 
     html += `</select>`;
 
-    return html;
+    return `
+      <div class="input-group">
+        <label id="${this.id}-label">
+          ${this.label}
+          ${html}
+        </label>
+      </div>
+    `;
   }
 
   get value() {

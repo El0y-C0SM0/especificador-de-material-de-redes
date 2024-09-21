@@ -1,9 +1,9 @@
 import { PavimentoForm, SalaDeEquipamentosForm } from "./src/forms/components.js";
 import { InputInt, SelectField } from "./src/forms/inputs.js";
 
-let seqs = [];
 
 $('input[name="seq-secundaria"]').change(function() {
+  let seqs = [];
   $('#formulario').empty();
   
   if ($(this).val() === 'com-seq-secundaria') {
@@ -18,11 +18,11 @@ $('input[name="seq-secundaria"]').change(function() {
     );
     
     quantidadeSEQInput.onUpdate(quantidadeSEQs => {
-      let $seqs = $("#formulario .seq");
+      // let $seqs = $("#formulario .seq");
       
       while (seqs.length > quantidadeSEQs) {
-        seqs.pop();
-        $seqs.last().remove();
+        let last = seqs.pop();
+        $('#' + last.id).remove();
       }
       
       while (seqs.length < quantidadeSEQs) {
@@ -34,9 +34,14 @@ $('input[name="seq-secundaria"]').change(function() {
     })
 
     quantidadeSEQInput.$element.appendTo("#setup");
-    console.log('O input de rádio com valor "com-seq-secundaria" está marcado!');
-  }
 
-  seqs.push(new SalaDeEquipamentosForm(0));
+    seqs.push(new SalaDeEquipamentosForm(0));
+  } else {
+    $("#numero-seqs-input").remove();
+    $("#numero-seqs-input-label").remove();
+    seqs.push(new SalaDeEquipamentosForm(-1));
+  }
+  
   seqs[0].$element.appendTo('#formulario');
+  $('body')[0].offsetHeight; // força o recálculo do tamanho do body
 });

@@ -85,6 +85,8 @@ export class PavimentoForm {
                 <h3>Pavimento ${this.numPavimento + 1}</h3>
             </div>
         `);
+
+        $element.addClass("pavimento");
     
         $element.append(this.rackAbertoChecbox.$element);
         $element.append(this.malhaHorizontalInput.$element);
@@ -255,13 +257,15 @@ export class SalaDeEquipamentosForm {
                 this.pavimentos.push(novoPavimento);
                 $(`#${this.id} .seq-pavimentos`).append($(novoPavimento.html));
             }
+
+            $('body')[0].offsetHeight; // força o recálculo do tamanho do body
         });
     }
 
     get html() {
         return `
             <section id="${this.id}" class="seq">
-                <h2>Sala de equipamentos ${this.numeroSEQ > 0 ? this.numeroSEQ : ''}</h2>
+                <h2>Sala de equipamentos ${this.numeroSEQ >= 0 ? this.numeroSEQ + 1 : ''}</h2>
                 <div class="seq-form">
                     ${this.tipoFibraRecebidasSelectField.html}
                     ${this.numeroFibrasRecebidasInput.html}
@@ -279,7 +283,7 @@ export class SalaDeEquipamentosForm {
     get $element() {
         let $section = $(`<section id="${this.id}" class="seq"></section>`);
     
-        let $h2 = $(`<h2>Sala de equipamentos ${this.numeroSEQ > 0 ? this.numeroSEQ : ''}</h2>`);
+        let $h2 = $(`<h2>Sala de equipamentos ${this.numeroSEQ >= 0 ? this.numeroSEQ + 1 : ''}</h2>`);
         $section.append($h2);
     
         let $seqFormDiv = $(`<div class="seq-form"></div>`);
@@ -294,22 +298,7 @@ export class SalaDeEquipamentosForm {
     
         let $seqPavimentosDiv = $(`<div class="seq-pavimentos"></div>`);
     
-        this.pavimentos.forEach(pavimento => {
-            let $pavimentoDiv = $(`<div id="pavimento-${pavimento.numPavimento}"></div>`);
-    
-            let $h3 = $(`<h3>Pavimento ${pavimento.numPavimento + 1}</h3>`);
-            $pavimentoDiv.append($h3);
-    
-            let $pontoTelecomDiv = $(`<div id="ponto-telecom-pavimento-${pavimento.numPavimento}"></div>`);
-    
-            $pontoTelecomDiv.append(pavimento.pontoRedeInput.$element);
-            $pontoTelecomDiv.append(pavimento.pontoCftvInput.$element);
-            $pontoTelecomDiv.append(pavimento.pontoVoipInput.$element);
-    
-            $pavimentoDiv.append($pontoTelecomDiv);
-    
-            $seqPavimentosDiv.append($pavimentoDiv);
-        });
+        this.pavimentos.forEach(pavimento => pavimento.$element);
     
         $section.append($seqPavimentosDiv);
     
