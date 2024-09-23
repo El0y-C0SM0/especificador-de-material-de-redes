@@ -1,14 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vite + React + TypeScript</title>
-  <script type="module" crossorigin src="/especificador-de-material-de-redes/assets/index-01e86bfb.js"></script>
-  <link rel="stylesheet" href="/especificador-de-material-de-redes/assets/index-83a474fc.css">
-</head>
-<body>
-  <div id="root"></div>
-  
-</body>
-</html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+     
+    <title>Quantificação de material de Rede</title>
+    <script type="module" crossorigin src="/assets/index-599f433c.js"></script>
+    <link rel="stylesheet" href="/assets/index-b574b867.css">
+  </head>
+  <body class="h-screen">
+    <header>
+      <h1>Quantificação de backbone óptico</h1>
+      <h2>Dados de entrada</h2>
+    </header>
+    <main id="root">
+      <section id="setup">
+        <h2 class="p-2 text-lg">Haverão salas de equipamentos secundárias?</h2>
+        <div class="flex items-center space-x-2 p-2">
+          <input type="radio" value="sem-seq-secundaria" id="sem-seq-secundaria" name="seq-secundaria" />
+          <label for="sem-seq-secundaria">Não terá sala de equipamentos secundária.</label>
+        </div>
+        <div class="flex items-center space-x-2 p-2">
+          <input type="radio" value="com-seq-secundaria" id="com-seq-secundaria" name="seq-secundaria"/>
+          <label for="com-seq-secundaria">Terá sala de equipamentos secundária.</label>
+        </div>
+      </section>
+      <section id="formulario" class="hidden"></section>
+      <button id="gerar-tabela-btn">Gerar tabela</button>
+      <section id="tabelas"></section>
+    </main>
+    <footer class="mx-auto md:w-2/3 mb-5">
+      <h2 class="text-2xl font-bold m-4">Contribuidores</h2>
+      <div class="flex justify-between">
+        <a href="https://github.com/MatheusViniciusV" target="_blank" rel="noopener noreferrer">
+          @MatheusViniciusV
+        </a>
+        <a href="https://github.com/El0y-C0SM0" target="_blank" rel="noopener noreferrer">
+          @El0y-C0SM0
+        </a>
+        <a href="https://github.com/VPom135" target="_blank" rel="noopener noreferrer">
+          @VPom135
+        </a>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    
+    
+    
+    
+    
+  </body>
+  </html>
