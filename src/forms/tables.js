@@ -1,6 +1,8 @@
-class TabelaBase {
+export class Tabela {
     titulo;
+    descricao;
     id;
+    linhas;
 
     static LinhaTabela = class {
         nome;
@@ -24,10 +26,35 @@ class TabelaBase {
         }
     }
 
-    constructor(titulo, id) {
+    constructor(titulo, id, descricao, linhas) {
         this.titulo = titulo;
         this.id = id;
+        this.descricao = descricao;
+        this.linhas = linhas;
     }
 
-    
+    get html() {
+        return `
+            <article id="${this.id}">
+                <h2>${this.titulo}</h2>
+                <p>${this.descricao}</p>
+                <table>
+                    <thead>
+                        <th>Nome</th>
+                        <th>Quantidade</th>
+                        <th>Unidade</th>
+                    </thead>
+                    <tbody>
+                        ${this.linhas.map(linha => {
+                            if (linha.quantidade > 0) return linha.html;
+                        }).join('\n')}
+                    </tbody>
+                    </table>
+            </article>
+        `;
+    }
+
+    get $element() {
+        return $(this.html);
+    }
 }

@@ -13,7 +13,7 @@
       <h2>Dados de entrada</h2>
     </header>
     <main id="root">
-      <div id="setup">
+      <section id="setup">
         <h2 class="p-2 text-lg">Haverão salas de equipamentos secundárias?</h2>
         <div class="flex items-center space-x-2 p-2">
           <input type="radio" value="sem-seq-secundaria" id="sem-seq-secundaria" name="seq-secundaria" />
@@ -23,11 +23,10 @@
           <input type="radio" value="com-seq-secundaria" id="com-seq-secundaria" name="seq-secundaria"/>
           <label for="com-seq-secundaria">Terá sala de equipamentos secundária.</label>
         </div>
-      </div>
-      <div id="formulario">
-
-      </div>
+      </section>
+      <section id="formulario" class="hidden"></section>
       <button id="gerar-tabela-btn">Gerar tabela</button>
+      <section id="tabelas"></section>
     </main>
     <footer class="mx-auto md:w-2/3 mb-5">
       <h2 class="text-2xl font-bold m-4">Contribuidores</h2>

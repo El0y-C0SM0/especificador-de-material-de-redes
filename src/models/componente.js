@@ -29,6 +29,8 @@ export class Rack {
     constructor(equipamentosAtivos, aberto = false) {
         var _a, _b, _c, _d;
         this.equipamentos = new Map([...equipamentosAtivos]);
+        this.componentes = new Map();
+        this.micelaneas = new Map();
         if (aberto)
             equipamentosAtivos.set(TipoEquipamentoRack.EXAUSTOR, new EquipamentoRack(TipoEquipamentoRack.EXAUSTOR, 1, 1));
         this.componentes.set(TipoComponenteRack.BANDEJA_DESLIZANTE, new ComponenteRack(TipoComponenteRack.BANDEJA_DESLIZANTE, 1, 1));

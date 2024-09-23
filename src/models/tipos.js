@@ -1,15 +1,15 @@
 export var TipoCaboUTP;
 (function (TipoCaboUTP) {
-    TipoCaboUTP[TipoCaboUTP["AZUL_CAT6"] = 0] = "AZUL_CAT6";
-    TipoCaboUTP[TipoCaboUTP["VERMELHO_CAT6"] = 1] = "VERMELHO_CAT6";
-    TipoCaboUTP[TipoCaboUTP["AMARELO_CAT6"] = 2] = "AMARELO_CAT6";
-    TipoCaboUTP[TipoCaboUTP["BRANCO_CAT6"] = 3] = "BRANCO_CAT6";
-    TipoCaboUTP[TipoCaboUTP["CINZA_CAT7"] = 4] = "CINZA_CAT7";
+    TipoCaboUTP["AZUL_CAT6"] = "azul CAT6";
+    TipoCaboUTP["VERMELHO_CAT6"] = "vermelho CAT6";
+    TipoCaboUTP["AMARELO_CAT6"] = "amarelo CAT6";
+    TipoCaboUTP["BRANCO_CAT6"] = "branco CAT6";
+    TipoCaboUTP["CINZA_CAT7"] = "cinza CAT7";
 })(TipoCaboUTP || (TipoCaboUTP = {}));
 ;
 export var TipoConector;
 (function (TipoConector) {
-    TipoConector[TipoConector["CAT6"] = 0] = "CAT6";
+    TipoConector["CAT6"] = "Conector fem\u00EAa CAT6";
 })(TipoConector || (TipoConector = {}));
 ;
 export class TipoPontoTelecom {
@@ -36,9 +36,9 @@ export class TipoPontoTelecom {
         }
     }
 }
-TipoPontoTelecom.REDE = 0;
-TipoPontoTelecom.CFTV = 1;
-TipoPontoTelecom.VOIP = 2;
+TipoPontoTelecom.REDE = "Rede";
+TipoPontoTelecom.CFTV = "CFTV";
+TipoPontoTelecom.VOIP = "VoIP";
 export class TipoAcopladorPigtailCordao {
     static getTipo(tipo, duplo) {
         if (tipo == TipoFibraOptica.FOMMIG_50_125) {
@@ -80,9 +80,9 @@ export var TipoComponenteRack;
 })(TipoComponenteRack || (TipoComponenteRack = {}));
 export var TipoUnidadeQuantidades;
 (function (TipoUnidadeQuantidades) {
-    TipoUnidadeQuantidades[TipoUnidadeQuantidades["METRO"] = 0] = "METRO";
-    TipoUnidadeQuantidades[TipoUnidadeQuantidades["CAIXA"] = 1] = "CAIXA";
-    TipoUnidadeQuantidades[TipoUnidadeQuantidades["UNIDADE"] = 2] = "UNIDADE";
+    TipoUnidadeQuantidades["METRO"] = "metro";
+    TipoUnidadeQuantidades["CAIXA"] = "caixa";
+    TipoUnidadeQuantidades["UNIDADE"] = "unidade";
 })(TipoUnidadeQuantidades || (TipoUnidadeQuantidades = {}));
 export var TipoMicelanea;
 (function (TipoMicelanea) {

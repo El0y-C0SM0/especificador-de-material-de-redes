@@ -32,7 +32,7 @@ class InputNumber {
 
   get html() {
     return `
-      <div class="input-group">
+      <div id="${this.id}-input-group" class="input-group">
         <label id="${this.id}-label">
           ${this.label}
           <input id="${this.id}" type="number" min="${this.min}" max="${this.max}" step="${this.step}" value="${this.valueDefault}">
@@ -89,7 +89,7 @@ export class Checkbox {
 
   get html() {
     return `
-      <div class="input-group">
+      <div id="${this.id}-input-group" class="input-group">
         <label id="${this.id}-label">
           ${this.label}
           <input id='${this.id}' type="checkbox">
@@ -130,7 +130,7 @@ export class SelectField {
     html += `</select>`;
 
     return `
-      <div class="input-group">
+      <div id="${this.id}-input-group" class="input-group">
         <label id="${this.id}-label">
           ${this.label}
           ${html}

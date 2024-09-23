@@ -1,7 +1,7 @@
 import { Checkbox, InputFloat, InputInt, SelectField } from "./inputs.js";
 import * as tps from "../models/tipos.js"
 import { Componente } from "../models/componente.js";
-import { AreaDeTrabalho, SalaDeTelecom } from "../models/salas.js";
+import { AreaDeTrabalho, SalaDeEquipamentos, SalaDeTelecom } from "../models/salas.js";
 
 export class PavimentoForm {
     numPavimento;
@@ -66,16 +66,16 @@ export class PavimentoForm {
 
     get html() {
         return `
-            <article id=${this.id} class="pavimento">
+            <div id=${this.id} class="pavimento">
                 <h3>Pavimento ${this.numPavimento + 1}</h3>
                 ${this.rackAbertoChecbox.html}
                 ${this.malhaHorizontalInput.html}
-                <div id="ponto-telecom-pavimento-${this.numPavimento}">
+                <div id="ponto-telecom-pavimento-${this.numPavimento}" class="pontos-telecom">
                     ${this.pontoRedeInput.html}
                     ${this.pontoCftvInput.html}
                     ${this.pontoVoipInput.html}
                 </div>
-            </article>
+            </div>
         `
     }
 
@@ -92,7 +92,7 @@ export class PavimentoForm {
         $element.append(this.malhaHorizontalInput.$element);
     
         let $pontoTelecomDiv = $(`
-            <div id="pontos-telecom-pavimento-${this.numPavimento}">
+            <div id="pontos-telecom-pavimento-${this.numPavimento}" class="pontos-telecom">
             </div>
         `);
     
@@ -158,17 +158,14 @@ export class PavimentoForm {
                 );
             }
 
-            let areaDeTrabalho = new AreaDeTrabalho(pontos); 
+            let areaDeTrabalho = new AreaDeTrabalho(pontos);
 
-            console.warn(areaDeTrabalho.numeroDiciplinas);
-
-            return undefined;
-            // return new SalaDeTelecom(
-            //     areaDeTrabalho,
-            //     comprimentoMalhaHorizontal,
-            //     this.numPavimento,
-            //     rackAberto
-            // );
+            return new SalaDeTelecom(
+                areaDeTrabalho,
+                comprimentoMalhaHorizontal,
+                this.numPavimento,
+                rackAberto
+            );
         } catch (error) {
             console.error(error);
         }
@@ -192,6 +189,8 @@ export class SalaDeEquipamentosForm {
         this.numeroSEQ = numeroSEQ;
         this.id = `seq-${numeroSEQ}`;
         this.pavimentos = [new PavimentoForm(0)];
+
+
 
         this.alturaAndarInput = new InputFloat(
             "Altura dos andares:", 
@@ -264,7 +263,7 @@ export class SalaDeEquipamentosForm {
 
     get html() {
         return `
-            <section id="${this.id}" class="seq">
+            <article id="${this.id}" class="seq">
                 <h2>Sala de equipamentos ${this.numeroSEQ >= 0 ? this.numeroSEQ + 1 : ''}</h2>
                 <div class="seq-form">
                     ${this.tipoFibraRecebidasSelectField.html}
@@ -276,7 +275,7 @@ export class SalaDeEquipamentosForm {
                 <div class="seq-pavimentos">
                     ${this.pavimentos.map(pavimento => pavimento.html).join('\n')}
                 </div>
-            </section>
+            </article>
         `
     }
 
@@ -298,7 +297,7 @@ export class SalaDeEquipamentosForm {
     
         let $seqPavimentosDiv = $(`<div class="seq-pavimentos"></div>`);
     
-        this.pavimentos.forEach(pavimento => pavimento.$element);
+        this.pavimentos.forEach(pavimento => $seqPavimentosDiv.append(pavimento.$element));
     
         $section.append($seqPavimentosDiv);
     
@@ -319,7 +318,35 @@ export class SalaDeEquipamentosForm {
         return valid;
     }
 
-    carregarSEQ() {
+    carregarSalaEquipamentos() {
+        if (!this.isValid) return undefined;
+        
+        let sets = this.pavimentos.map(pavimento => pavimento.carregarSalaTelecom());
 
+        let seqs = [];
+        
+        if ($("#seq-principal-input") != undefined && parseInt($("#seq-principal-input").val()) - 1 === this.numeroSEQ) {
+            seqs = [];
+        }
+        
+        const alturaAndar = this.alturaAndarInput.value;
+        const pavimentoPrincipal = this.pavimentoPrincipalInput.value - 1;
+        const numeroFibras = this.numeroFibrasRecebidasInput.value;
+        const tipoFibra = this.tipoFibraRecebidasSelectField.value;
+
+        let setPrincipal = sets[pavimentoPrincipal];
+
+        return new SalaDeEquipamentos(
+            setPrincipal.areaDeTrabalho,
+            setPrincipal.comprimentoMalhaHorizontal,
+            pavimentoPrincipal,
+            alturaAndar,
+            sets,
+            seqs,
+            0,
+            setPrincipal.rackAberto,
+            numeroFibras,
+            tipoFibra
+        )
     }
 }

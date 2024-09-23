@@ -59,10 +59,10 @@ export class AreaDeTrabalho {
 export class SalaDeTelecom {
     rackAberto: boolean;
     // Pigtails são duplos nos TO e simples no DIO
-    pigtails!: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
-    cordoes!: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
-    acopladores!: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>; 
-    micelaneas!: Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>;
+    pigtails: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
+    cordoes: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>;
+    acopladores: Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>; 
+    micelaneas: Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>;
     // É tanto as fibras que redebem da SEQ primária quanto do provedor.
     fibrasOpticasRecebidas!: Componente<Tipos.TipoFibraOptica>; 
     areaDeTrabalho: AreaDeTrabalho;
@@ -76,8 +76,13 @@ export class SalaDeTelecom {
         numeroPiso: number, 
         rackAberto: boolean = false
     ) {
-        this.rackAberto = rackAberto;
         this.areaDeTrabalho = areaDeTrabalho;
+        this.rackAberto = rackAberto;
+        this.equipamentosAtivos = new Map<Tipos.TipoEquipamentoRack, EquipamentoRack>();
+        this.pigtails = new Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>();
+        this.cordoes = new Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>();
+        this.acopladores = new Map<Tipos.TipoAcopladorPigtailCordao, Componente<Tipos.TipoAcopladorPigtailCordao>>();
+        this.micelaneas = new Map<Tipos.TipoMicelanea, Componente<Tipos.TipoMicelanea>>();
 
         if (comprimentoMalhaHorizontal > 90) {
             throw new DistanciaInvalidaError(
@@ -110,6 +115,8 @@ export class SalaDeTelecom {
 
         let tipoAcoplador: Tipos.TipoAcopladorPigtailCordao;
         let quantidadeAcopladores: number;
+
+        if (this.fibrasOpticasRecebidas == undefined) return;
 
         if(this.numeroFibras <= 8) {
             this.equipamentos.set(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO, new EquipamentoRack(
@@ -297,14 +304,15 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     salasDeTelecom: SalaDeTelecom[];
     // SEQ secundarias
     salasDeEquipamento: SalaDeEquipamentos[];
-    peDireitoAndares!: number;
+    alturaAndares: number;
     // distancia que essa seq está da principal.
     distanciaSEQ: number;
 
     constructor(
         areaDeTrabalho: AreaDeTrabalho, 
         comprimentoMalhaHorizontal: number, 
-        numeroPiso: number, 
+        numeroPiso: number,
+        alturaAndares: number,
         salasDeTelecom: SalaDeTelecom[],
         salasDeEquipamento: SalaDeEquipamentos[] = [], 
         distanciaSEQ: number = 0, 
@@ -316,6 +324,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
         this.salasDeTelecom = salasDeTelecom;
         this.salasDeEquipamento = salasDeEquipamento;
         this.distanciaSEQ = distanciaSEQ;
+        this.alturaAndares = alturaAndares;
 
         this.defineFibrasOpticas(quantidadeFibrasRecebidas, tipoFibrasRecebidas);
 
@@ -333,16 +342,19 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     get tipoFibra(): Tipos.TipoFibraOptica {
         let maiorFibra = 0;
 
-        if(this.salasDeEquipamento.length == 0) {
-            let sortedSalasDeTelecom = this.salasDeTelecom.slice().sort((a, b) => {
+        if (this.salasDeEquipamento == undefined)
+            return Tipos.TipoFibraOptica.FOMMIG_50_125;
+
+        if(this?.salasDeEquipamento?.length == 0) {
+            let sortedSalasDeTelecom = this?.salasDeTelecom?.slice().sort((a, b) => {
                 return a.numeroPiso - b.numeroPiso;
             });
 
             maiorFibra = Math.max(...sortedSalasDeTelecom.map(sala => {
-                return Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.peDireitoAndares; 
+                return Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.alturaAndares; 
             }));
-        } else if (this.salasDeEquipamento.length != 0) {
-            let sortedSalaDeEquipamentos = this.salasDeEquipamento.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
+        } else if (this?.salasDeEquipamento?.length != 0) {
+            let sortedSalaDeEquipamentos = this?.salasDeEquipamento?.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
 
             maiorFibra = Math.max(...sortedSalaDeEquipamentos.map(sala => sala.distanciaSEQ));
         }
@@ -353,11 +365,11 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     get diciplinas(): Set<Tipos.TipoPontoTelecom> {
         let diciplinas = super.diciplinas;
 
-        this.salasDeTelecom.forEach(sala => {
+        this?.salasDeTelecom?.forEach(sala => {
             sala.diciplinas.forEach(diciplina => diciplinas.add(diciplina));
         });
 
-        this.salasDeEquipamento.forEach(sala => {
+        this?.salasDeEquipamento?.forEach(sala => {
             sala.diciplinas.forEach(diciplina => diciplinas.add(diciplina));
         });
 
@@ -368,11 +380,11 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     get numeroFibras() : number {
         let numeroFibras = 0;
 
-        this.salasDeTelecom.forEach(sala => numeroFibras += sala.numeroFibras);
-        this.salasDeEquipamento.forEach(sala => numeroFibras += sala.numeroFibras);
+        this?.salasDeTelecom?.forEach(sala => numeroFibras += sala.numeroFibras);
+        this?.salasDeEquipamento?.forEach(sala => numeroFibras += sala.numeroFibras);
         numeroFibras += super.numeroFibras;
 
-        return numeroFibras;
+        return (numeroFibras == 0 ? super.numeroFibras : numeroFibras);
     }
 
     get fibraBackbone(): Componente<Tipos.TipoFibraOptica> {
@@ -383,7 +395,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
         });
 
         sortedSalasDeTelecom.forEach(sala => {
-            distancia += Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.peDireitoAndares; 
+            distancia += Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.alturaAndares; 
         });
 
         let sortedSalaDeEquipamentos = this.salasDeEquipamento.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
@@ -396,7 +408,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     protected defineAtivos(): void {
         super.defineAtivos();
 
-        this.salasDeTelecom.forEach(sala => sala.diciplinas.has(Tipos.TipoPontoTelecom.CFTV));
+        // this.salasDeTelecom.forEach(sala => sala.diciplinas.has(Tipos.TipoPontoTelecom.CFTV));
 
         if (this.equipamentos.get(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO) != undefined) {
             this.equipamentos.delete(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO);
@@ -405,12 +417,12 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
         if (this.diciplinas.has(Tipos.TipoPontoTelecom.CFTV)) {
             let quantidadeFibrasCFTV = 0;
 
-            this.salasDeTelecom.forEach(sala => {
+            this?.salasDeTelecom?.forEach(sala => {
                 if (sala.diciplinas.has(Tipos.TipoPontoTelecom.CFTV))
                     quantidadeFibrasCFTV += 2;
             });
 
-            this.salasDeEquipamento.forEach(sala => {
+            this?.salasDeEquipamento?.forEach(sala => {
                 if (sala.diciplinas.has(Tipos.TipoPontoTelecom.CFTV))
                     quantidadeFibrasCFTV += 1;
             });
@@ -438,13 +450,15 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
             Math.ceil(this.numeroFibras / 24) + 1, 
             1,
         ));
-        
-        tipoAcoplador = Tipos.TipoAcopladorPigtailCordao.getTipo(
-            this.fibrasOpticasRecebidas.tipo, 
-            false
-        );
-        
-        this.defineAcopladores(tipoAcoplador, this.fibrasOpticasRecebidas.quantidade);
+
+        if (this.fibrasOpticasRecebidas != undefined) {
+            tipoAcoplador = Tipos.TipoAcopladorPigtailCordao.getTipo(
+                this.fibrasOpticasRecebidas.tipo, 
+                false
+            );
+
+            this.defineAcopladores(tipoAcoplador, this.fibrasOpticasRecebidas.quantidade);
+        }
     }
 
     protected defineFibrasOpticas(
@@ -460,12 +474,15 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
                 tipoFibra
         ));
 
-        this.salasDeEquipamento.forEach(sala => sala.fibrasOpticasRecebidas =
-            new Componente<Tipos.TipoFibraOptica>(
+        this.salasDeEquipamento.forEach(sala => {
+            sala.fibrasOpticasRecebidas = new Componente<Tipos.TipoFibraOptica>(
                 sala.numeroFibras, 
                 Tipos.TipoUnidadeQuantidades.UNIDADE, 
                 tipoFibra
-        ));
+            );
+
+            sala.save()
+        });
 
         this.fibrasOpticasRecebidas = new Componente<Tipos.TipoFibraOptica>(
             quantidadeFibrasRecebidas,

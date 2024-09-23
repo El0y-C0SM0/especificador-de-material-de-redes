@@ -1,19 +1,19 @@
 export enum TipoCaboUTP {
-    AZUL_CAT6,
-    VERMELHO_CAT6,
-    AMARELO_CAT6,
-    BRANCO_CAT6,
-    CINZA_CAT7
+    AZUL_CAT6 = 'azul CAT6',
+    VERMELHO_CAT6 = 'vermelho CAT6',
+    AMARELO_CAT6 = 'amarelo CAT6',
+    BRANCO_CAT6 = 'branco CAT6',
+    CINZA_CAT7 = 'cinza CAT7'
 };
 
 export enum TipoConector {
-    CAT6
+    CAT6 = 'Conector femêa CAT6'
 };
 
 export class TipoPontoTelecom {
-    static REDE = 0;
-    static CFTV = 1;
-    static VOIP = 2;
+    static REDE = "Rede";
+    static CFTV = "CFTV";
+    static VOIP = "VoIP";
 
     static toTipoPatchCord(tipoPonto: TipoPontoTelecom): TipoCaboUTP {
         switch (tipoPonto) {
@@ -77,9 +77,9 @@ export enum TipoComponenteRack {
 }
 
 export enum TipoUnidadeQuantidades {
-    METRO,
-    CAIXA,
-    UNIDADE
+    METRO = "metro",
+    CAIXA = "caixa",
+    UNIDADE = "unidade"
 }
 
 export enum TipoMicelanea {
