@@ -16,12 +16,12 @@ export class AreaDeTrabalho {
         let quantidadeTomadas = 0;
         pontosTelecom.forEach(ponto => {
             totalPontos += ponto.quantidade;
-            quantidadeTomadas += (ponto.tipo === Tipos.TipoPontoTelecom.REDE ? ponto.quantidade * 2 : ponto.quantidade);
+            quantidadeTomadas += ponto.quantidade;
             let tipoCabo = Tipos.TipoPontoTelecom.toTipoPatchCord(ponto.tipo);
             this.patchCords.set(tipoCabo, new Componente(ponto.quantidade, Tipos.TipoUnidadeQuantidades.UNIDADE, tipoCabo));
         });
         this.tomadasFemeas = new Componente(quantidadeTomadas, Tipos.TipoUnidadeQuantidades.UNIDADE, Tipos.TipoConector.CAT6);
-        this.micelaneas.set(Tipos.TipoMicelanea.ETIQUETAS_IDENTIFICACAO, new Componente(quantidadeTomadas + totalPontos, // tomadas + espelhos
+        this.micelaneas.set(Tipos.TipoMicelanea.ETIQUETAS_IDENTIFICACAO, new Componente(quantidadeTomadas + (quantidadeTomadas / 2), // tomadas + espelhos
         Tipos.TipoUnidadeQuantidades.UNIDADE, Tipos.TipoMicelanea.ETIQUETAS_IDENTIFICACAO));
     }
     get numeroDiciplinas() {
@@ -164,6 +164,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     }
     save() {
         super.save();
+        console.log("Meu pauuuuuuuuuu");
         this.defineFibrasOpticas();
         this.defineAtivos();
     }
@@ -251,8 +252,11 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     }
     defineFibrasOpticas(quantidadeFibrasRecebidas = 12, tipoFibraRecebida = Tipos.TipoFibraOptica.FOSM_9_125) {
         let tipoFibra = this.fibraBackbone.tipo;
-        this.salasDeTelecom.forEach(sala => sala.fibrasOpticasRecebidas =
-            new Componente(sala.numeroFibras, Tipos.TipoUnidadeQuantidades.UNIDADE, tipoFibra));
+        this.salasDeTelecom.forEach(sala => {
+            sala.fibrasOpticasRecebidas = new Componente(sala.numeroFibras, Tipos.TipoUnidadeQuantidades.UNIDADE, tipoFibra);
+            sala.save();
+            console.log(sala.pigtails);
+        });
         this.salasDeEquipamento.forEach(sala => {
             sala.fibrasOpticasRecebidas = new Componente(sala.numeroFibras, Tipos.TipoUnidadeQuantidades.UNIDADE, tipoFibra);
             sala.save();

@@ -25,7 +25,7 @@ export class PavimentoForm {
             "Comprimento da malha horizontal:",
             `malha-horizontal-${numPavimento}`,
             1,
-            undefined,
+            90,
             10,
             false,
             undefined
@@ -236,7 +236,7 @@ export class SalaDeEquipamentosForm {
             "Pavimento principal:",
             "pavimento-principal-input",
             1,
-            24,
+            1,
             1,
             false,
             1
@@ -257,7 +257,12 @@ export class SalaDeEquipamentosForm {
                 $(`#${this.id} .seq-pavimentos`).append($(novoPavimento.html));
             }
 
-            $('body')[0].offsetHeight; // força o recálculo do tamanho do body
+            $(`#${this.id} #pavimento-principal-input`).attr("max", quantidadePavimentos);
+
+            if (parseInt($(`#${this.id} #pavimento-principal-input`).val()) > quantidadePavimentos)
+                $(`#${this.id} #pavimento-principal-input`).val(quantidadePavimentos);
+
+            $('body')[0].offsetHeight;
         });
     }
 

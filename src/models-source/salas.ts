@@ -28,7 +28,7 @@ export class AreaDeTrabalho {
 
         pontosTelecom.forEach(ponto => {
             totalPontos += ponto.quantidade;
-            quantidadeTomadas += (ponto.tipo === Tipos.TipoPontoTelecom.REDE ? ponto.quantidade * 2 : ponto.quantidade);
+            quantidadeTomadas += ponto.quantidade;
 
             let tipoCabo = Tipos.TipoPontoTelecom.toTipoPatchCord(ponto.tipo);
         
@@ -41,7 +41,7 @@ export class AreaDeTrabalho {
 
         this.tomadasFemeas = new Componente<Tipos.TipoConector>(quantidadeTomadas, Tipos.TipoUnidadeQuantidades.UNIDADE, Tipos.TipoConector.CAT6);
         this.micelaneas.set(Tipos.TipoMicelanea.ETIQUETAS_IDENTIFICACAO, new Componente<Tipos.TipoMicelanea>(
-            quantidadeTomadas + totalPontos, // tomadas + espelhos
+            quantidadeTomadas + (quantidadeTomadas / 2), // tomadas + espelhos
             Tipos.TipoUnidadeQuantidades.UNIDADE, 
             Tipos.TipoMicelanea.ETIQUETAS_IDENTIFICACAO
         ));
@@ -144,6 +144,7 @@ export class SalaDeTelecom {
             );
             quantidadeAcopladores = this.numeroFibras;
         }
+
 
         this.defineAcopladores(tipoAcoplador, quantidadeAcopladores);
     }
@@ -334,6 +335,8 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     save(): void {
         super.save();
 
+        console.log("Meu pauuuuuuuuuu");
+
         this.defineFibrasOpticas()
         this.defineAtivos();
     }
@@ -467,12 +470,16 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     ): void {
         let tipoFibra = this.fibraBackbone.tipo;
 
-        this.salasDeTelecom.forEach(sala => sala.fibrasOpticasRecebidas =
-            new Componente<Tipos.TipoFibraOptica>(
+        this.salasDeTelecom.forEach(sala => {
+            sala.fibrasOpticasRecebidas = new Componente<Tipos.TipoFibraOptica>(
                 sala.numeroFibras, 
                 Tipos.TipoUnidadeQuantidades.UNIDADE, 
                 tipoFibra
-        ));
+            );
+
+            sala.save();
+            console.log(sala.pigtails);
+        });
 
         this.salasDeEquipamento.forEach(sala => {
             sala.fibrasOpticasRecebidas = new Componente<Tipos.TipoFibraOptica>(
@@ -481,7 +488,7 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
                 tipoFibra
             );
 
-            sala.save()
+            sala.save();
         });
 
         this.fibrasOpticasRecebidas = new Componente<Tipos.TipoFibraOptica>(

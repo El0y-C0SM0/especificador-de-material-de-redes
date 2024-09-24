@@ -41,10 +41,10 @@ export class TipoPontoTelecom {
 }
 
 export class TipoAcopladorPigtailCordao {
-    static LC_DUPLO_MM_50_125 = 0;
-    static LC_SIMPLES_MM_50_125 = 1;
-    static LC_DUPLO_SM_9_125 = 2;
-    static LC_SIMPLES_SM_9_125 = 3;
+    static LC_DUPLO_MM_50_125 = "LC duplo MM 50x125µm";
+    static LC_SIMPLES_MM_50_125 = "LC simples MM 50x125µm";
+    static LC_DUPLO_SM_9_125 = "LC duplo SM 9x125µm";
+    static LC_SIMPLES_SM_9_125 = "LC simples SM 9x125µm";
 
     static getTipo(tipo: TipoFibraOptica, duplo: boolean): TipoAcopladorPigtailCordao{
         if (tipo == TipoFibraOptica.FOMMIG_50_125) {
@@ -83,9 +83,9 @@ export enum TipoUnidadeQuantidades {
 }
 
 export enum TipoMicelanea {
-    ETIQUETAS_IDENTIFICACAO,
-    ABRACADEIRAS,
-    PORCAS_GAIOLAS
+    ETIQUETAS_IDENTIFICACAO = "Etiquetas de identificação",
+    ABRACADEIRAS = "abraçadeiras",
+    PORCAS_GAIOLAS = "porcas gaiolas",
 }
 
 export class TipoFibraOptica {

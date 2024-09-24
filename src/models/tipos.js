@@ -55,10 +55,10 @@ export class TipoAcopladorPigtailCordao {
         }
     }
 }
-TipoAcopladorPigtailCordao.LC_DUPLO_MM_50_125 = 0;
-TipoAcopladorPigtailCordao.LC_SIMPLES_MM_50_125 = 1;
-TipoAcopladorPigtailCordao.LC_DUPLO_SM_9_125 = 2;
-TipoAcopladorPigtailCordao.LC_SIMPLES_SM_9_125 = 3;
+TipoAcopladorPigtailCordao.LC_DUPLO_MM_50_125 = "LC duplo MM 50x125µm";
+TipoAcopladorPigtailCordao.LC_SIMPLES_MM_50_125 = "LC simples MM 50x125µm";
+TipoAcopladorPigtailCordao.LC_DUPLO_SM_9_125 = "LC duplo SM 9x125µm";
+TipoAcopladorPigtailCordao.LC_SIMPLES_SM_9_125 = "LC simples SM 9x125µm";
 export var TipoEquipamentoRack;
 (function (TipoEquipamentoRack) {
     TipoEquipamentoRack[TipoEquipamentoRack["PATCH_PANEL_24"] = 0] = "PATCH_PANEL_24";
@@ -86,9 +86,9 @@ export var TipoUnidadeQuantidades;
 })(TipoUnidadeQuantidades || (TipoUnidadeQuantidades = {}));
 export var TipoMicelanea;
 (function (TipoMicelanea) {
-    TipoMicelanea[TipoMicelanea["ETIQUETAS_IDENTIFICACAO"] = 0] = "ETIQUETAS_IDENTIFICACAO";
-    TipoMicelanea[TipoMicelanea["ABRACADEIRAS"] = 1] = "ABRACADEIRAS";
-    TipoMicelanea[TipoMicelanea["PORCAS_GAIOLAS"] = 2] = "PORCAS_GAIOLAS";
+    TipoMicelanea["ETIQUETAS_IDENTIFICACAO"] = "Etiquetas de identifica\u00E7\u00E3o";
+    TipoMicelanea["ABRACADEIRAS"] = "abra\u00E7adeiras";
+    TipoMicelanea["PORCAS_GAIOLAS"] = "porcas gaiolas";
 })(TipoMicelanea || (TipoMicelanea = {}));
 export class TipoFibraOptica {
     static getTipoFibra(distancia) {

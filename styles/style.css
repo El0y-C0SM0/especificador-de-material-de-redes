@@ -112,7 +112,7 @@ header h2 {
 }
 
 .pontos-telecom .input-group {
-  @apply w-auto;
+  @apply w-[25%];
 }
 
 .input-group {
@@ -120,7 +120,7 @@ header h2 {
 }
 
 .input-group input {
-  @apply w-full grow h-8 px-3 py-2 ring-offset-background;
+  @apply w-full grow h-10 px-3 py-2 ring-offset-background rounded-sm border border-input placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed;
 }
 
 .input-group label {
@@ -142,6 +142,10 @@ header h2 {
 .input-group input[type="checkbox"][data-state="checked"] {
   @apply bg-primary text-primary-foreground;
 }
+
+/* .input-group input[type="radio"] {
+  @apply aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+} */
 
 .input-group input[type="radio"] {
   @apply aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background;
