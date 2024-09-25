@@ -176,4 +176,8 @@ export class Rack {
 
         return  Rack.arredondaAltura(altura);;
     }
+
+    get altura() {
+        return this.alturaTotal;
+    }
 }

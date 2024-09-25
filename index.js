@@ -133,6 +133,7 @@ function loadLinhasSalasDeTelecom(salasDeEquipamentos) {
   let cordoes = new Map();
   let acopladores = new Map();
   let micelaneas = new Map();
+  let patchCables = new Map();
   let jumperCables = new Componente(0, tps.TipoUnidadeQuantidades.UNIDADE, tps.TipoCaboUTP.CINZA_CAT7);
 
   salasDeTelecom.forEach(sala => {
@@ -182,6 +183,15 @@ function loadLinhasSalasDeTelecom(salasDeEquipamentos) {
       }
     });
 
+    sala.patchCables.forEach(patchCable => {
+      let prev = patchCables.get(patchCable.tipo);
+
+      if (prev != undefined)
+        patchCable.quantidade += prev.quantidade;
+
+      patchCables.set(patchCable.tipo, patchCable);
+    });
+
     jumperCables.quantidade += sala.jumperCables.quantidade;
   });
 
@@ -222,6 +232,13 @@ function loadLinhasSalasDeTelecom(salasDeEquipamentos) {
       micelanea.unidade
   )});
 
+  const patchCablesLinhas = Array.from(patchCables.values()).map(patchCable => {
+    return new Tabela.LinhaTabela(
+      `Patch Cable ${patchCable.tipo} 3 metros`,
+      patchCable.quantidade,
+      patchCable.unidade
+  )});
+
   const jumperCablesLinhas = new Tabela.LinhaTabela(
     `Jumper cable ${jumperCables.tipo}`,
     jumperCables.quantidade,
@@ -232,6 +249,7 @@ function loadLinhasSalasDeTelecom(salasDeEquipamentos) {
 
   return [
     malhaHorizontalLinha,
+    ...patchCablesLinhas,
     jumperCablesLinhas,
     ...pigtailsLinhas,
     ...cordoesLinhas,
@@ -246,6 +264,8 @@ function loadLinhasSalasDeEquipamentos(salasDeEquipamentos) {
   let cordoes = new Map();
   let acopladores = new Map();
   let micelaneas = new Map();
+  let backbones = new Map();
+  let patchCables = new Map();
   let jumperCables = new Componente(0, tps.TipoUnidadeQuantidades.UNIDADE, tps.TipoCaboUTP.CINZA_CAT7);
 
   salasDeEquipamentos.forEach(sala => {
@@ -295,6 +315,22 @@ function loadLinhasSalasDeEquipamentos(salasDeEquipamentos) {
       }
     });
 
+    sala.patchCables.forEach(patchCable => {
+      let prev = patchCables.get(patchCable.tipo);
+
+      if (prev != undefined)
+        patchCable.quantidade += prev.quantidade;
+
+      patchCables.set(patchCable.tipo, patchCable);
+    });
+
+    let fibraBackbone = sala.fibraBackbone;
+    let prevBackbone = backbones.get(fibraBackbone.tipo);
+
+    if (prevBackbone != undefined)
+      fibraBackbone.quantidade += prevBackbone.quantidade;
+    backbones.set(fibraBackbone.tipo, fibraBackbone)
+    
     jumperCables.quantidade += sala.jumperCables.quantidade;
   });
 
@@ -322,6 +358,13 @@ function loadLinhasSalasDeEquipamentos(salasDeEquipamentos) {
     )
   });
 
+  const patchCablesLinhas = Array.from(patchCables.values()).map(patchCable => {
+    return new Tabela.LinhaTabela(
+      `Patch Cable ${patchCable.tipo} 3 metros`,
+      patchCable.quantidade,
+      patchCable.unidade
+  )});
+
   const malhaHorizontalLinha = new Tabela.LinhaTabela(
     `MH ${tps.TipoCaboUTP.BRANCO_CAT6}`,
     Math.ceil(comprimentoMalhaHorizontal / 305),
@@ -341,15 +384,108 @@ function loadLinhasSalasDeEquipamentos(salasDeEquipamentos) {
     jumperCables.unidade
   );
 
+  const backbonesLinhas = Array.from(backbones.values()).map(backbone => {
+    return new Tabela.LinhaTabela(
+      `${backbone.tipo} backbone`,
+      backbone.quantidade,
+      backbone.unidade
+  )})
+
   salasDeEquipamentos.forEach(sala => console.log(sala.pigtails));
+
+  // TODO patch cables
 
   return [
     malhaHorizontalLinha,
+    ...patchCablesLinhas,
     jumperCablesLinhas,
+    ...backbonesLinhas,
     ...pigtailsLinhas,
     ...cordoesLinhas,
     ...acopladoresLinhas,
     ...micelaneasLinhas,
+  ]
+}
+
+function loadLinhasRacks(salasDeEquipamentos) {
+  let salasDeTelecom = [];
+  salasDeEquipamentos.forEach(seq => salasDeTelecom = salasDeTelecom.concat(seq.salasDeTelecom));
+
+  let racks = new Map();
+  let equipamentos = new Map();
+  let componentes = new Map();
+  let micelaneas = new Map();
+
+  salasDeEquipamentos.forEach(sala => {
+    let racksSala = sala.racks;
+
+    racksSala.forEach(rack => {
+      let prevRack = racks.get(`Rack ${rack.altura}U ${rack.aberto ? 'aberto' : 'fechado'}`);
+
+      if (prevRack == undefined) 
+        racks.set(`Rack ${rack.altura}U ${rack.aberto ? 'aberto' : 'fechado'}`, 1);
+      else
+        racks.set(`Rack ${rack.altura}U ${rack.aberto ? 'aberto' : 'fechado'}`, prevRack + 1);
+
+      rack.equipamentos.forEach(equipamento => {
+        let prev = equipamentos.get(equipamento.tipo);
+
+        if (prev != undefined)
+          equipamento.quantidade += prev.quantidade
+        equipamentos.set(equipamento.tipo, equipamento);
+      });
+
+      rack.componentes.forEach(componente => {
+        let prev = componentes.get(componente.tipo);
+
+        if (prev != undefined)
+          componente.quantidade += prev.quantidade
+        componentes.set(componente.tipo, componente);
+      });
+      
+      rack.micelaneas.forEach(micelanea => {
+        let prev = micelaneas.get(micelanea.tipo);
+
+        if (prev != undefined)
+          micelanea.quantidade += prev.quantidade
+        micelaneas.set(micelanea.tipo, micelanea);
+      });
+    });
+  });
+
+  const racksLinhas = Array.from(racks).map(([rack, quantidade]) => {
+    return new Tabela.LinhaTabela(
+      rack,
+      quantidade,
+      tps.TipoUnidadeQuantidades.UNIDADE
+  )});
+
+  const equipamentosLinhas = Array.from(equipamentos.values).map(equipamento => {
+    return new Tabela.LinhaTabela(
+      `${equipamento.tipo} ${equipamento.alturaUnitaria}U`,
+      equipamento.quantidade,
+      tps.TipoUnidadeQuantidades.UNIDADE
+  )});
+
+  const componentesLinhas = Array.from(componentes.values).map(componente => {
+    return new Tabela.LinhaTabela(
+      `${componente.tipo} ${componente.alturaUnitaria}U`,
+      componente.quantidade,
+      tps.TipoUnidadeQuantidades.UNIDADE
+  )});
+
+  const micelaneasLinhas = Array.from(micelaneas.values()).map(micelanea => {
+    return new Tabela.LinhaTabela(
+      micelanea.tipo,
+      micelanea.quantidade,
+      micelanea.unidade
+  )});
+
+  return [
+    ...racksLinhas,
+    ...equipamentosLinhas,
+    ...componentesLinhas,
+    ...micelaneasLinhas
   ]
 }
 
@@ -384,4 +520,13 @@ $('#gerar-tabela-btn').on('click', () => {
     loadLinhasSalasDeEquipamentos(salasDeEquipamentos)
   );
   tabelaSalasDeEquipamentos.$element.appendTo("#tabelas");
+
+  // section tabela com os componente do rack
+  let tabelaRacks = new Tabela(
+    "Racks",
+    "tabela-racks",
+    "Itens quantificados nos racks",
+    loadLinhasRacks(salasDeEquipamentos)
+  );
+  tabelaRacks.$element.appendTo("#tabelas");
 })
