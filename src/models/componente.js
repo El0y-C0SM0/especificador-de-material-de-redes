@@ -31,7 +31,7 @@ export class Rack {
         this.equipamentos = new Map([...equipamentosAtivos]);
         this.componentes = new Map();
         this.micelaneas = new Map();
-        if (aberto)
+        if (!aberto)
             equipamentosAtivos.set(TipoEquipamentoRack.EXAUSTOR, new EquipamentoRack(TipoEquipamentoRack.EXAUSTOR, 1, 1));
         this.componentes.set(TipoComponenteRack.BANDEJA_DESLIZANTE, new ComponenteRack(TipoComponenteRack.BANDEJA_DESLIZANTE, 1, 1));
         this.componentes.set(TipoComponenteRack.BANDEJA_FIXA, new ComponenteRack(TipoComponenteRack.BANDEJA_FIXA, 1, 1));
@@ -75,6 +75,9 @@ export class Rack {
         let altura = [...this.equipamentos.values(), ...this.componentes.values()].reduce((acc, curr) => acc + curr.alturaUnitaria, 0) * 1.5;
         return Rack.arredondaAltura(altura);
         ;
+    }
+    get altura() {
+        return this.alturaTotal;
     }
 }
 Rack.tamanhoMaximo = 48;

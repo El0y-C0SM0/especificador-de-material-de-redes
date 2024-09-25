@@ -57,7 +57,7 @@ export class Rack {
         this.componentes = new Map<TipoComponenteRack, ComponenteRack>();
         this.micelaneas = new Map<TipoMicelanea, Componente<TipoMicelanea>>();
 
-        if (aberto) equipamentosAtivos.set(
+        if (!aberto) equipamentosAtivos.set(
             TipoEquipamentoRack.EXAUSTOR,
             new EquipamentoRack(TipoEquipamentoRack.EXAUSTOR, 1, 1)
         );

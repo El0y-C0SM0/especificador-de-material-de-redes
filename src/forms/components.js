@@ -339,7 +339,7 @@ export class SalaDeEquipamentosForm {
         const numeroFibras = this.numeroFibrasRecebidasInput.value;
         const tipoFibra = this.tipoFibraRecebidasSelectField.value;
 
-        let setPrincipal = sets[pavimentoPrincipal];
+        let setPrincipal = sets.splice(pavimentoPrincipal, 1)[0];
 
         return new SalaDeEquipamentos(
             setPrincipal.areaDeTrabalho,

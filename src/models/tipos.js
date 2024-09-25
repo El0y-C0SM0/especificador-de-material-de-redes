@@ -61,22 +61,22 @@ TipoAcopladorPigtailCordao.LC_DUPLO_SM_9_125 = "LC duplo SM 9x125µm";
 TipoAcopladorPigtailCordao.LC_SIMPLES_SM_9_125 = "LC simples SM 9x125µm";
 export var TipoEquipamentoRack;
 (function (TipoEquipamentoRack) {
-    TipoEquipamentoRack[TipoEquipamentoRack["PATCH_PANEL_24"] = 0] = "PATCH_PANEL_24";
-    TipoEquipamentoRack[TipoEquipamentoRack["PATCH_PANEL"] = 1] = "PATCH_PANEL";
-    TipoEquipamentoRack[TipoEquipamentoRack["SWITCH_24"] = 2] = "SWITCH_24";
-    TipoEquipamentoRack[TipoEquipamentoRack["DIO_24"] = 3] = "DIO_24";
-    TipoEquipamentoRack[TipoEquipamentoRack["DIO_24_4"] = 4] = "DIO_24_4";
-    TipoEquipamentoRack[TipoEquipamentoRack["TERMINADOR_OPTICO"] = 5] = "TERMINADOR_OPTICO";
-    TipoEquipamentoRack[TipoEquipamentoRack["SVR_24"] = 6] = "SVR_24";
-    TipoEquipamentoRack[TipoEquipamentoRack["EXAUSTOR"] = 7] = "EXAUSTOR";
-    TipoEquipamentoRack[TipoEquipamentoRack["NO_BREAK"] = 8] = "NO_BREAK";
+    TipoEquipamentoRack["PATCH_PANEL_24"] = "Patch panel 24 portas";
+    TipoEquipamentoRack["PATCH_PANEL"] = "Patch panel";
+    TipoEquipamentoRack["SWITCH_24"] = "Switch 24 portas";
+    TipoEquipamentoRack["DIO_24"] = "DIO 24 portas";
+    TipoEquipamentoRack["DIO_24_4"] = "DIO 24 portas 4 cabos";
+    TipoEquipamentoRack["TERMINADOR_OPTICO"] = "Terminador \u00F3ptico";
+    TipoEquipamentoRack["SVR_24"] = "SVR 24 portas";
+    TipoEquipamentoRack["EXAUSTOR"] = "Exaustor";
+    TipoEquipamentoRack["NO_BREAK"] = "No break";
 })(TipoEquipamentoRack || (TipoEquipamentoRack = {}));
 export var TipoComponenteRack;
 (function (TipoComponenteRack) {
-    TipoComponenteRack[TipoComponenteRack["BANDEJA_FIXA"] = 0] = "BANDEJA_FIXA";
-    TipoComponenteRack[TipoComponenteRack["BANDEJA_DESLIZANTE"] = 1] = "BANDEJA_DESLIZANTE";
-    TipoComponenteRack[TipoComponenteRack["ORGANIZADOR_FRONTAL"] = 2] = "ORGANIZADOR_FRONTAL";
-    TipoComponenteRack[TipoComponenteRack["BANDEJA_DE_EMENDA_12"] = 3] = "BANDEJA_DE_EMENDA_12";
+    TipoComponenteRack["BANDEJA_FIXA"] = "Bandeja fixa";
+    TipoComponenteRack["BANDEJA_DESLIZANTE"] = "Bandeja deslizante";
+    TipoComponenteRack["ORGANIZADOR_FRONTAL"] = "Organizador frontal";
+    TipoComponenteRack["BANDEJA_DE_EMENDA_12"] = "Bandeja de emenda 12 fibras";
 })(TipoComponenteRack || (TipoComponenteRack = {}));
 export var TipoUnidadeQuantidades;
 (function (TipoUnidadeQuantidades) {
@@ -87,8 +87,8 @@ export var TipoUnidadeQuantidades;
 export var TipoMicelanea;
 (function (TipoMicelanea) {
     TipoMicelanea["ETIQUETAS_IDENTIFICACAO"] = "Etiquetas de identifica\u00E7\u00E3o";
-    TipoMicelanea["ABRACADEIRAS"] = "abra\u00E7adeiras";
-    TipoMicelanea["PORCAS_GAIOLAS"] = "porcas gaiolas";
+    TipoMicelanea["ABRACADEIRAS"] = "Abra\u00E7adeiras";
+    TipoMicelanea["PORCAS_GAIOLAS"] = "Porcas gaiolas";
 })(TipoMicelanea || (TipoMicelanea = {}));
 export class TipoFibraOptica {
     static getTipoFibra(distancia) {

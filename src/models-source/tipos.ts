@@ -58,22 +58,22 @@ export class TipoAcopladorPigtailCordao {
 }
 
 export enum TipoEquipamentoRack {
-    PATCH_PANEL_24,
-    PATCH_PANEL,
-    SWITCH_24,
-    DIO_24,
-    DIO_24_4,
-    TERMINADOR_OPTICO,
-    SVR_24,
-    EXAUSTOR,
-    NO_BREAK,
+    PATCH_PANEL_24 = "Patch panel 24 portas",
+    PATCH_PANEL = "Patch panel",
+    SWITCH_24 = "Switch 24 portas",
+    DIO_24 = "DIO 24 portas",
+    DIO_24_4 = "DIO 24 portas 4 cabos",
+    TERMINADOR_OPTICO = "Terminador óptico",
+    SVR_24 = "SVR 24 portas",
+    EXAUSTOR = "Exaustor",
+    NO_BREAK = "No break",
 }
 
 export enum TipoComponenteRack {
-    BANDEJA_FIXA,
-    BANDEJA_DESLIZANTE,
-    ORGANIZADOR_FRONTAL,
-    BANDEJA_DE_EMENDA_12
+    BANDEJA_FIXA = "Bandeja fixa",
+    BANDEJA_DESLIZANTE = "Bandeja deslizante",
+    ORGANIZADOR_FRONTAL = "Organizador frontal",
+    BANDEJA_DE_EMENDA_12 = "Bandeja de emenda 12 fibras"
 }
 
 export enum TipoUnidadeQuantidades {
@@ -84,8 +84,8 @@ export enum TipoUnidadeQuantidades {
 
 export enum TipoMicelanea {
     ETIQUETAS_IDENTIFICACAO = "Etiquetas de identificação",
-    ABRACADEIRAS = "abraçadeiras",
-    PORCAS_GAIOLAS = "porcas gaiolas",
+    ABRACADEIRAS = "Abraçadeiras",
+    PORCAS_GAIOLAS = "Porcas gaiolas",
 }
 
 export class TipoFibraOptica {

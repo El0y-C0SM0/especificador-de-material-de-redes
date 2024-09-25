@@ -6,8 +6,6 @@ import * as tps from "./src/models/tipos.js";
 
 var seqs = [];
 
-console.log(tps.TipoConector.CAT6);
-
 $('input[name="seq-secundaria"]').change(function() {
   $('#formulario').empty();
   seqs = [];
@@ -74,6 +72,8 @@ function loadLinhasAreaDeTrabalho(salasDeEquipamentos) {
   let salasDeTelecom = [];
   salasDeEquipamentos.forEach(seq => salasDeTelecom = salasDeTelecom.concat(seq.salasDeTelecom));
   let areasDeTrabalho = salasDeTelecom.map(sala => sala.areaDeTrabalho);
+  salasDeEquipamentos.forEach(seq => areasDeTrabalho.push(seq.areaDeTrabalho));
+  
 
   let conectoresFemeas = new Tabela.LinhaTabela(tps.TipoConector.CAT6, 0, tps.TipoUnidadeQuantidades.UNIDADE);
   let patchCords = new Map();
@@ -245,8 +245,6 @@ function loadLinhasSalasDeTelecom(salasDeEquipamentos) {
     jumperCables.unidade
   );
 
-  salasDeEquipamentos.forEach(sala => console.log(sala.pigtails));
-
   return [
     malhaHorizontalLinha,
     ...patchCablesLinhas,
@@ -389,11 +387,7 @@ function loadLinhasSalasDeEquipamentos(salasDeEquipamentos) {
       `${backbone.tipo} backbone`,
       backbone.quantidade,
       backbone.unidade
-  )})
-
-  salasDeEquipamentos.forEach(sala => console.log(sala.pigtails));
-
-  // TODO patch cables
+  )});
 
   return [
     malhaHorizontalLinha,
@@ -411,12 +405,14 @@ function loadLinhasRacks(salasDeEquipamentos) {
   let salasDeTelecom = [];
   salasDeEquipamentos.forEach(seq => salasDeTelecom = salasDeTelecom.concat(seq.salasDeTelecom));
 
+  let salas = [...salasDeEquipamentos, ...salasDeTelecom];
+
   let racks = new Map();
   let equipamentos = new Map();
   let componentes = new Map();
   let micelaneas = new Map();
 
-  salasDeEquipamentos.forEach(sala => {
+  salas.forEach(sala => {
     let racksSala = sala.racks;
 
     racksSala.forEach(rack => {
@@ -460,14 +456,14 @@ function loadLinhasRacks(salasDeEquipamentos) {
       tps.TipoUnidadeQuantidades.UNIDADE
   )});
 
-  const equipamentosLinhas = Array.from(equipamentos.values).map(equipamento => {
+  const equipamentosLinhas = Array.from(equipamentos.values()).map(equipamento => {
     return new Tabela.LinhaTabela(
       `${equipamento.tipo} ${equipamento.alturaUnitaria}U`,
       equipamento.quantidade,
       tps.TipoUnidadeQuantidades.UNIDADE
   )});
 
-  const componentesLinhas = Array.from(componentes.values).map(componente => {
+  const componentesLinhas = Array.from(componentes.values()).map(componente => {
     return new Tabela.LinhaTabela(
       `${componente.tipo} ${componente.alturaUnitaria}U`,
       componente.quantidade,
@@ -521,7 +517,7 @@ $('#gerar-tabela-btn').on('click', () => {
   );
   tabelaSalasDeEquipamentos.$element.appendTo("#tabelas");
 
-  // section tabela com os componente do rack
+  // section tabela com os componentes do rack
   let tabelaRacks = new Tabela(
     "Racks",
     "tabela-racks",
