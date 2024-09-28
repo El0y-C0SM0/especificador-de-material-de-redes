@@ -43,7 +43,7 @@ class InputNumber {
 
   get isValid() {
     const inputValue = this.value;
-    if (inputValue === "" && this.nullable) {
+    if ((inputValue === "" || inputValue === null) && this.nullable) {
       return true;
     } else if (inputValue < this.min || inputValue > this.max) {
       return false;

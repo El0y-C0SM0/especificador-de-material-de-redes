@@ -119,7 +119,7 @@ export class SalaDeTelecom {
         if (this.fibrasOpticasRecebidas == undefined) return;
 
         if(this.numeroFibras <= 8) {
-            this.equipamentos.set(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO, new EquipamentoRack(
+            this.equipamentosAtivos.set(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO, new EquipamentoRack(
                 Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO, 
                 1, 
                 0, 
@@ -132,7 +132,7 @@ export class SalaDeTelecom {
             quantidadeAcopladores = this.numeroFibras / 2;
 
         } else {
-            this.equipamentos.set(Tipos.TipoEquipamentoRack.DIO_24, new EquipamentoRack(
+            this.equipamentosAtivos.set(Tipos.TipoEquipamentoRack.DIO_24, new EquipamentoRack(
                 Tipos.TipoEquipamentoRack.DIO_24, 
                 Math.ceil(this.numeroFibras / 24), 
                 1,
@@ -335,8 +335,6 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
     save(): void {
         super.save();
 
-        console.log("Meu pauuuuuuuuuu");
-
         this.defineFibrasOpticas()
         this.defineAtivos();
     }
@@ -398,12 +396,13 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
         });
 
         sortedSalasDeTelecom.forEach(sala => {
-            distancia += Math.abs(this.numeroPiso - sala.numeroPiso + 1) * this.alturaAndares; 
+            distancia += (Math.abs(this.numeroPiso - sala.numeroPiso) + 2) * this.alturaAndares; 
         });
 
         let sortedSalaDeEquipamentos = this.salasDeEquipamento.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
 
         sortedSalaDeEquipamentos.forEach(sala => distancia += sala.distanciaSEQ);
+
 
         return new Componente<Tipos.TipoFibraOptica>(distancia, Tipos.TipoUnidadeQuantidades.METRO, this.tipoFibra);
     }
@@ -413,8 +412,8 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
 
         // this.salasDeTelecom.forEach(sala => sala.diciplinas.has(Tipos.TipoPontoTelecom.CFTV));
 
-        if (this.equipamentos.get(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO) != undefined) {
-            this.equipamentos.delete(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO);
+        if (this.equipamentosAtivos.get(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO) != undefined) {
+            this.equipamentosAtivos.delete(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO);
         }
 
         if (this.diciplinas.has(Tipos.TipoPontoTelecom.CFTV)) {
@@ -478,7 +477,6 @@ export class SalaDeEquipamentos extends SalaDeTelecom {
             );
 
             sala.save();
-            console.log(sala.pigtails);
         });
 
         this.salasDeEquipamento.forEach(sala => {

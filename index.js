@@ -6,10 +6,13 @@ import * as tps from "./src/models/tipos.js";
 
 var seqs = [];
 
+let numeroSEQPrincipalInput = undefined;
+
 $('input[name="seq-secundaria"]').change(function() {
   $('#formulario').empty();
   seqs = [];
   $('#formulario').removeClass('hidden');
+  numeroSEQPrincipalInput = undefined;
   
   if ($(this).val() === 'com-seq-secundaria') {
     let quantidadeSEQInput = new InputInt(
@@ -22,7 +25,7 @@ $('input[name="seq-secundaria"]').change(function() {
       1
     );
     
-    let numeroSEQPrincipalInput = new InputInt(
+    numeroSEQPrincipalInput = new InputInt(
       "Número da sala de equipamentos principal:",
       "seq-principal-input",
       1,
@@ -390,10 +393,10 @@ function loadLinhasSalasDeEquipamentos(salasDeEquipamentos) {
   )});
 
   return [
+    ...backbonesLinhas,
     malhaHorizontalLinha,
     ...patchCablesLinhas,
     jumperCablesLinhas,
-    ...backbonesLinhas,
     ...pigtailsLinhas,
     ...cordoesLinhas,
     ...acopladoresLinhas,
@@ -488,7 +491,10 @@ function loadLinhasRacks(salasDeEquipamentos) {
 $('#gerar-tabela-btn').on('click', () => {
   $("#tabelas").empty();
 
-  let salasDeEquipamentos = seqs.map(sala => sala.carregarSalaEquipamentos());
+  let salasDeEquipamentos = seqs.map(sala => sala.carregarSalaEquipamentos(undefined));
+  
+  if (numeroSEQPrincipalInput != undefined && numeroSEQPrincipalInput.isValid)
+    salasDeEquipamentos[numeroSEQPrincipalInput.value - 1] = seqs[numeroSEQPrincipalInput.value - 1].carregarSalaEquipamentos(salasDeEquipamentos);
 
   // section tabela da area de trabalho
   let tabelaAreaDeTrabalho = new Tabela(

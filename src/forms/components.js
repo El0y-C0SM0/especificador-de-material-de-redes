@@ -177,6 +177,7 @@ export class SalaDeEquipamentosForm {
     alturaAndarInput;
     numeroPavimentosInput;
     pavimentoPrincipalInput;
+    distanciaDaSEQPrincipalInput;
     numeroFibrasRecebidasInput;
     tipoFibraRecebidasSelectField;
 
@@ -189,8 +190,6 @@ export class SalaDeEquipamentosForm {
         this.numeroSEQ = numeroSEQ;
         this.id = `seq-${numeroSEQ}`;
         this.pavimentos = [new PavimentoForm(0)];
-
-
 
         this.alturaAndarInput = new InputFloat(
             "Altura dos andares:", 
@@ -230,6 +229,16 @@ export class SalaDeEquipamentosForm {
             1,
             false,
             undefined          
+        );
+
+        this.distanciaDaSEQPrincipalInput = new InputInt(
+            "Distância da SEQ principal (em metros):",
+            "distancia-da-seq-principal-input",
+            0,
+            40_000,
+            150,
+            false,
+            1
         );
 
         this.pavimentoPrincipalInput = new InputInt(
@@ -274,6 +283,7 @@ export class SalaDeEquipamentosForm {
                     ${this.tipoFibraRecebidasSelectField.html}
                     ${this.numeroFibrasRecebidasInput.html}
                     ${this.alturaAndarInput.html}
+                    ${this.distanciaDaSEQPrincipalInput.html}
                     ${this.numeroPavimentosInput.html}
                     ${this.pavimentoPrincipalInput.html}
                 </div>
@@ -295,6 +305,7 @@ export class SalaDeEquipamentosForm {
         $seqFormDiv.append(this.tipoFibraRecebidasSelectField.$element);
         $seqFormDiv.append(this.numeroFibrasRecebidasInput.$element);
         $seqFormDiv.append(this.alturaAndarInput.$element);
+        $seqFormDiv.append(this.distanciaDaSEQPrincipalInput.$element);
         $seqFormDiv.append(this.numeroPavimentosInput.$element);
         $seqFormDiv.append(this.pavimentoPrincipalInput.$element);
     
@@ -323,20 +334,15 @@ export class SalaDeEquipamentosForm {
         return valid;
     }
 
-    carregarSalaEquipamentos() {
+    carregarSalaEquipamentos(seqs = []) {
         if (!this.isValid) return undefined;
         
         let sets = this.pavimentos.map(pavimento => pavimento.carregarSalaTelecom());
-
-        let seqs = [];
-        
-        if ($("#seq-principal-input") != undefined && parseInt($("#seq-principal-input").val()) - 1 === this.numeroSEQ) {
-            seqs = [];
-        }
         
         const alturaAndar = this.alturaAndarInput.value;
         const pavimentoPrincipal = this.pavimentoPrincipalInput.value - 1;
         const numeroFibras = this.numeroFibrasRecebidasInput.value;
+        const distanciaSEQ = seqs.length == 0 ? this.distanciaDaSEQPrincipalInput.value : 0;
         const tipoFibra = this.tipoFibraRecebidasSelectField.value;
 
         let setPrincipal = sets.splice(pavimentoPrincipal, 1)[0];
@@ -348,7 +354,7 @@ export class SalaDeEquipamentosForm {
             alturaAndar,
             sets,
             seqs,
-            0,
+            distanciaSEQ,
             setPrincipal.rackAberto,
             numeroFibras,
             tipoFibra

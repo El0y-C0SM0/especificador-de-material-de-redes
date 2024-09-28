@@ -47,13 +47,14 @@ export class Rack {
     componentes!: Map<TipoComponenteRack, ComponenteRack>;
     jumperCables?: Componente<TipoCaboUTP>;
     micelaneas!: Map<TipoMicelanea, Componente<TipoMicelanea>>;
-    aberto!: boolean;
+    aberto: boolean;
 
     constructor(equipamentosAtivos: Map<TipoEquipamentoRack, EquipamentoRack>, aberto: boolean = false) {
         this.equipamentos = new Map<TipoEquipamentoRack, EquipamentoRack>(
             [...equipamentosAtivos]
         );
 
+        this.aberto = aberto;
         this.componentes = new Map<TipoComponenteRack, ComponenteRack>();
         this.micelaneas = new Map<TipoMicelanea, Componente<TipoMicelanea>>();
 
@@ -67,7 +68,7 @@ export class Rack {
             new ComponenteRack(
                 TipoComponenteRack.BANDEJA_DESLIZANTE,
                 1,
-                1
+                4
             )
         );
 
