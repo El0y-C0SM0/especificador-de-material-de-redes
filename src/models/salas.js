@@ -59,7 +59,6 @@ export class SalaDeTelecom {
         let quantidadeAcopladores;
         if (this.fibrasOpticasRecebidas == undefined)
             return;
-        // console.log(this.numeroFibras);
         if (this.numeroFibras <= 8) {
             this.equipamentosAtivos.set(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO, new EquipamentoRack(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO, 1, 0));
             tipoAcoplador = Tipos.TipoAcopladorPigtailCordao.getTipo(this.fibrasOpticasRecebidas.tipo, true);
