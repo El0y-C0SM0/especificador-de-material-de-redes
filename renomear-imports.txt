@@ -1,4 +1,0 @@
-A cada compilação, busque imports na pasta src/models que correspondam a:
-    (from\s+)(["'])(?!.*\.js)(\.?\.\/.*)(["'])
-E aplique a seguinte mudança:
-    $1$2$3.js$4
