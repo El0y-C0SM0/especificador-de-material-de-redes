@@ -1,10 +1,10 @@
-export class DistanciaInvalidaError extends Error {
+class DistanciaInvalidaError extends Error {
     constructor(mensagem) {
         super(mensagem);
         this.name = "DistanciaInvalidaError";
     }
 }
-export class TamanhoRackInvalidoError extends Error {
+class TamanhoRackInvalidoError extends Error {
     constructor(mensagem, altura) {
         super(mensagem);
         this.altura = 0;
@@ -12,4 +12,7 @@ export class TamanhoRackInvalidoError extends Error {
         this.name = "DistanciaInvalidaError";
     }
 }
+
 //# sourceMappingURL=excecoes.js.map
+
+export { DistanciaInvalidaError, TamanhoRackInvalidoError };

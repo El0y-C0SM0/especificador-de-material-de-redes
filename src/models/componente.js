@@ -1,31 +1,36 @@
-import { TamanhoRackInvalidoError } from "./excecoes.js";
-import { TipoEquipamentoRack, TipoUnidadeQuantidades, TipoComponenteRack, TipoMicelanea, TipoCaboUTP } from "./tipos.js";
-export class Componente {
+import { TamanhoRackInvalidoError } from "./excecoes";
+import { TipoEquipamentoRack, TipoUnidadeQuantidades, TipoComponenteRack, TipoMicelanea, TipoCaboUTP } from "./tipos";
+
+class Componente {
     constructor(quatidade, unidade, tipo) {
         this.quantidade = quatidade;
         this.unidade = unidade;
         this.tipo = tipo;
     }
 }
+
 class ItemRack {
     constructor(quantidade, alturaUnitaria) {
         this.quantidade = quantidade;
         this.alturaUnitaria = alturaUnitaria;
     }
 }
-export class EquipamentoRack extends ItemRack {
+
+class EquipamentoRack extends ItemRack {
     constructor(tipo, quantidade, alturaUnitaria) {
         super(quantidade, alturaUnitaria);
         this.tipo = tipo;
     }
 }
-export class ComponenteRack extends ItemRack {
+
+class ComponenteRack extends ItemRack {
     constructor(tipo, quantidade, alturaUnitaria) {
         super(quantidade, alturaUnitaria);
         this.tipo = tipo;
     }
 }
-export class Rack {
+
+class Rack {
     constructor(equipamentosAtivos, aberto = false) {
         var _a, _b, _c, _d;
         this.equipamentos = new Map([...equipamentosAtivos]);
@@ -81,5 +86,9 @@ export class Rack {
         return this.alturaTotal;
     }
 }
+
 Rack.tamanhoMaximo = 48;
+
 //# sourceMappingURL=componente.js.map
+
+export { Componente, EquipamentoRack, ComponenteRack, Rack };

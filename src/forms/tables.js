@@ -1,4 +1,4 @@
-export class Tabela {
+class Tabela {
   titulo;
   descricao;
   id;
@@ -60,3 +60,5 @@ export class Tabela {
     return $(this.html);
   }
 }
+
+export default Tabela;
