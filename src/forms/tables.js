@@ -1,4 +1,5 @@
 class Tabela {
+  
   titulo;
   descricao;
   id;

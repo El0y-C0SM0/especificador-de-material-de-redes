@@ -1,36 +1,31 @@
 import { TamanhoRackInvalidoError } from "./excecoes";
 import { TipoEquipamentoRack, TipoUnidadeQuantidades, TipoComponenteRack, TipoMicelanea, TipoCaboUTP } from "./tipos";
-
-class Componente {
+export class Componente {
     constructor(quatidade, unidade, tipo) {
         this.quantidade = quatidade;
         this.unidade = unidade;
         this.tipo = tipo;
     }
 }
-
 class ItemRack {
     constructor(quantidade, alturaUnitaria) {
         this.quantidade = quantidade;
         this.alturaUnitaria = alturaUnitaria;
     }
 }
-
-class EquipamentoRack extends ItemRack {
+export class EquipamentoRack extends ItemRack {
     constructor(tipo, quantidade, alturaUnitaria) {
         super(quantidade, alturaUnitaria);
         this.tipo = tipo;
     }
 }
-
-class ComponenteRack extends ItemRack {
+export class ComponenteRack extends ItemRack {
     constructor(tipo, quantidade, alturaUnitaria) {
         super(quantidade, alturaUnitaria);
         this.tipo = tipo;
     }
 }
-
-class Rack {
+export class Rack {
     constructor(equipamentosAtivos, aberto = false) {
         var _a, _b, _c, _d;
         this.equipamentos = new Map([...equipamentosAtivos]);
@@ -86,9 +81,5 @@ class Rack {
         return this.alturaTotal;
     }
 }
-
 Rack.tamanhoMaximo = 48;
-
 //# sourceMappingURL=componente.js.map
-
-export { Componente, EquipamentoRack, ComponenteRack, Rack };

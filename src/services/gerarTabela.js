@@ -4,7 +4,6 @@ import { loadAreaDeTrabalho, loadRacks,
 
 import { TabelaForms as Tabela } from "../exports/formsExports.js";
 
-export default gerarTabela;
 
 function gerarTabela(seqs_, nSeqPrincipal) {
 
@@ -14,40 +13,42 @@ function gerarTabela(seqs_, nSeqPrincipal) {
     if (nSeqPrincipal != undefined && nSeqPrincipal.isValid)
         seqs[nSeqPrincipal.value - 1] = seqs_[nSeqPrincipal.value - 1].carregarSEQ(seqs);
 
-    // section tabela da area de trabalho
-    let tabelaAreaDeTrabalho = new Tabela(
+    let tabelaAreaDeTrabalho, tabelaSalasDeTelecom, tabelaSalasDeEquipamentos, tabelaRacks;
+
+    tabelaAreaDeTrabalho = new Tabela(
         "Área de trabalho", 
         "tabela-area-de-trabalho", 
         "Itens quantificados na área de trabalho.", 
         loadAreaDeTrabalho(seqs)
     );
-    tabelaAreaDeTrabalho.$element.appendTo("#tabelas");
-
-    // section tabela das salas de telecom
-    let tabelaSalasDeTelecom = new Tabela(
+    
+    tabelaSalasDeTelecom = new Tabela(
         "Salas de Telecomunicações",
         "tabela-sala-telecom",
         "Itens quantificados nas salas de telecomunicações",
         loadTelecom(seqs)
     );
-    tabelaSalasDeTelecom.$element.appendTo("#tabelas");
 
-    // section tabela das salas de equipamentos
-    let tabelaSalasDeEquipamentos = new Tabela(
+    tabelaSalasDeEquipamentos = new Tabela(
         "Salas de Equipamentos",
         "tabela-sala-equipamentos",
         "Itens quantificados nas salas de equipamentos",
         loadSEQ(seqs)
     );
-    tabelaSalasDeEquipamentos.$element.appendTo("#tabelas");
 
-    // section tabela com os componentes do rack
-    let tabelaRacks = new Tabela(
+    tabelaRacks = new Tabela(
         "Racks",
         "tabela-racks",
         "Itens quantificados nos racks",
         loadRacks(seqs)
     );
+
+    tabelaAreaDeTrabalho.$element.appendTo("#tabelas");
+    tabelaSalasDeTelecom.$element.appendTo("#tabelas");
+    tabelaSalasDeEquipamentos.$element.appendTo("#tabelas");
     tabelaRacks.$element.appendTo("#tabelas");
 
 }
+
+
+export default gerarTabela;
