@@ -7,8 +7,8 @@ var seqs, seqPrincipal;
 
 $('input[name="seq-secundaria"]').change(function() {
 
-  seqs, seqPrincipal = updateSetup(this);
-
+  [seqs, seqPrincipal] = updateSetup(this);
+  
 });
 
 gerarTabelaBtn.addEventListener('click', function(){

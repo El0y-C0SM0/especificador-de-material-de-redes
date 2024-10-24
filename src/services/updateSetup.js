@@ -17,12 +17,11 @@ function updateSetup(input) {
         $("#numero-seqs-input-input-group").remove();
         $("#seq-principal-input-input-group").remove();
         
-        updateForms([], undefined)
-        return [], undefined;
+        return updateForms([], undefined);
     
     }
     
-    seqs, seqPrincipal = setForMultipleSEQs(seqs, seqPrincipal);
+    [seqs, seqPrincipal] = setForMultipleSEQs(seqs, seqPrincipal);
     
     return updateForms(seqs, seqPrincipal);
 
@@ -70,8 +69,6 @@ function setForMultipleSEQs(seqs, seqPrincipal) {
         if (parseInt($("#seq-principal-input").val()) > quantidadeSEQs)
             $("#seq-principal-input").val(quantidadeSEQs);
 
-        console.log(seqs.length);
-
     });
 
     quantidadeSEQInput.$element.appendTo("#setup");
@@ -79,19 +76,19 @@ function setForMultipleSEQs(seqs, seqPrincipal) {
 
     seqs.push(new SEQForms(0));
 
-    return seqs, seqPrincipal;
+    return [seqs, seqPrincipal];
 
 }
 
 function updateForms(seqs, seqPrincipal) {
-
 
     seqs.push(new SEQForms(-1));
     seqs[0].$element.appendTo('#formulario');
 
     $('body')[0].offsetHeight; // força o recálculo do tamanho do body
 
-    return seqs, seqPrincipal;
+
+    return [seqs, seqPrincipal];
 
 }
 
