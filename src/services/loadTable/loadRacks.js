@@ -17,6 +17,9 @@ function loadRacks(salasDeEquipamentos) {
     salas.forEach(sala => {
       let racksSala = sala.racks;
   
+      if(racksSala == undefined)
+        return;
+
       racksSala.forEach(rack => {
         let prevRack = racks.get(`Rack ${rack.altura}U ${rack.aberto ? 'aberto' : 'fechado'}`);
   

@@ -4,9 +4,9 @@ import { TiposModels as tps } from "../../exports/modelsExports.js";
 
 export default loadTelecom;
 
-function loadTelecom(salasDeEquipamentos) {
+function loadTelecom(seqs) {
     let salasDeTelecom = [];
-    salasDeEquipamentos.forEach(seq => salasDeTelecom = salasDeTelecom.concat(seq.salasDeTelecom));
+    seqs.forEach(seq => salasDeTelecom = salasDeTelecom.concat(seq.salasDeTelecom));
   
     let comprimentoMalhaHorizontal = 0;
     let pigtails = new Map();

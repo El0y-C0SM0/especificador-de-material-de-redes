@@ -4,11 +4,16 @@ import { TiposModels as tps } from "../../exports/modelsExports.js";
 export default loadAreaDeTrabalho;
 
 function loadAreaDeTrabalho(salasDeEquipamentos) {
+
     let salasDeTelecom = [];
     salasDeEquipamentos.forEach(seq => salasDeTelecom = salasDeTelecom.concat(seq.salasDeTelecom));
+
     let areasDeTrabalho = salasDeTelecom.map(sala => sala.areaDeTrabalho);
-    salasDeEquipamentos.forEach(seq => areasDeTrabalho.push(seq.areaDeTrabalho));
-    
+    //salasDeEquipamentos.forEach(seq => areasDeTrabalho.push(seq.areaDeTrabalho));
+
+    console.log(salasDeEquipamentos);
+    console.log(salasDeTelecom);
+    console.log(areasDeTrabalho);
   
     let conectoresFemeas = new Tabela.LinhaTabela(tps.TipoConector.CAT6, 0, tps.TipoUnidadeQuantidades.UNIDADE);
     let patchCords = new Map();

@@ -184,17 +184,12 @@ class SEQForm {
         const distanciaSEQ = seqs.length == 0 ? this.distanciaDaSEQPrincipalInput.value : 0;
         const tipoFibra = this.tipoFibraRecebidasSelectField.value;
 
-        let setPrincipal = sets.splice(pavimentoPrincipal, 1)[0];
-
         return new SEQ(
-            setPrincipal.areaDeTrabalho,
-            setPrincipal.comprimentoMalhaHorizontal,
             pavimentoPrincipal,
             alturaAndar,
             sets,
             seqs,
             distanciaSEQ,
-            setPrincipal.rackAberto,
             numeroFibras,
             tipoFibra
         )

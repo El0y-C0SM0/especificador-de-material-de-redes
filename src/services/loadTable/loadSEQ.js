@@ -16,7 +16,8 @@ function loadSEQ(salasDeEquipamentos) {
   
     salasDeEquipamentos.forEach(sala => {
       comprimentoMalhaHorizontal += sala.comprimentoMalhaHorizontal;
-  
+      //equipamento da SET do pavimento principal não são mais quantificados juntos à SEQ
+      /*
       sala.pigtails.forEach(pigtail => {
         let prev = pigtails.get(pigtail.tipo);
       
@@ -69,7 +70,10 @@ function loadSEQ(salasDeEquipamentos) {
   
         patchCables.set(patchCable.tipo, patchCable);
       });
-  
+
+      jumperCables.quantidade += sala.jumperCables.quantidade;
+
+      */
       let fibraBackbone = sala.fibraBackbone;
       let prevBackbone = backbones.get(fibraBackbone.tipo);
   
@@ -77,7 +81,6 @@ function loadSEQ(salasDeEquipamentos) {
         fibraBackbone.quantidade += prevBackbone.quantidade;
       backbones.set(fibraBackbone.tipo, fibraBackbone)
       
-      jumperCables.quantidade += sala.jumperCables.quantidade;
     });
   
     const pigtailsLinhas = Array.from(pigtails.values()).map(pigtail => {

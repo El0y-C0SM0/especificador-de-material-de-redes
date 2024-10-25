@@ -74,7 +74,7 @@ function setForMultipleSEQs(seqs, seqPrincipal) {
     quantidadeSEQInput.$element.appendTo("#setup");
     seqPrincipal.$element.appendTo("#setup");
 
-    seqs.push(new SEQForms(0));
+    //seqs.push(new SEQForms(0));
 
     return [seqs, seqPrincipal];
 
@@ -82,7 +82,7 @@ function setForMultipleSEQs(seqs, seqPrincipal) {
 
 function updateForms(seqs, seqPrincipal) {
 
-    seqs.push(new SEQForms(-1));
+    seqs.push(new SEQForms(0));
     seqs[0].$element.appendTo('#formulario');
 
     $('body')[0].offsetHeight; // força o recálculo do tamanho do body

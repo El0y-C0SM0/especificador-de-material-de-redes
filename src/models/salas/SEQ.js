@@ -1,25 +1,27 @@
 import { 
     ComponenteModel as Componente, 
     EquipamentoRackModel as EquipamentoRack,
-    TiposModels as Tipos
+    TiposModels as Tipos,
+    RackModel as Rack
 } from "../../exports/modelsExports.js"
 
-import SalaTelecom from "./SalaTelecom.js";
+//import SalaTelecom from "./SalaTelecom.js";
 
-class SEQ extends SalaTelecom {
-    constructor(areaDeTrabalho, comprimentoMalhaHorizontal, numeroPiso, alturaAndares, salasDeTelecom, salasDeEquipamento = [], distanciaSEQ = 0, rackAberto = false, quantidadeFibrasRecebidas = 12, tipoFibrasRecebidas = Tipos.TipoFibraOptica.FOSM_9_125) {
-        super(areaDeTrabalho, comprimentoMalhaHorizontal, numeroPiso, rackAberto = rackAberto);
+class SEQ /*extends SalaTelecom*/ {
+    constructor(numeroPiso, alturaAndares, salasDeTelecom, salasDeEquipamento = [], distanciaSEQ = 0, quantidadeFibrasRecebidas = 12, tipoFibrasRecebidas = Tipos.TipoFibraOptica.FOSM_9_125) {
+        this.numeroPiso = numeroPiso;
         this.salasDeTelecom = salasDeTelecom;
         this.salasDeEquipamento = salasDeEquipamento;
         this.distanciaSEQ = distanciaSEQ;
         this.alturaAndares = alturaAndares;
+        this.rackAberto = salasDeTelecom[numeroPiso].rackAberto;
         this.defineFibrasOpticas(quantidadeFibrasRecebidas, tipoFibrasRecebidas);
-        this.defineAtivos();
+        //this.defineAtivos();
     }
     save() {
-        super.save();
+        //super.save();
         this.defineFibrasOpticas();
-        this.defineAtivos();
+        //this.defineAtivos();
     }
     // informa o tipo da fibra que leva até as SEQ e SET
     get tipoFibra() {
@@ -41,6 +43,7 @@ class SEQ extends SalaTelecom {
         }
         return Tipos.TipoFibraOptica.getTipoFibra(maiorFibra);
     }
+    /*
     get diciplinas() {
         var _a, _b;
         let diciplinas = super.diciplinas;
@@ -60,7 +63,7 @@ class SEQ extends SalaTelecom {
         (_b = this === null || this === void 0 ? void 0 : this.salasDeEquipamento) === null || _b === void 0 ? void 0 : _b.forEach(sala => numeroFibras += sala.numeroFibras);
         numeroFibras += super.numeroFibras;
         return (numeroFibras == 0 ? super.numeroFibras : numeroFibras);
-    }
+    } */
     get fibraBackbone() {
         let distancia = 0;
         let sortedSalasDeTelecom = this.salasDeTelecom.slice().sort((a, b) => {
@@ -72,10 +75,22 @@ class SEQ extends SalaTelecom {
         let sortedSalaDeEquipamentos = this.salasDeEquipamento.slice().sort((a, b) => a.distanciaSEQ - b.distanciaSEQ);
         sortedSalaDeEquipamentos.forEach(sala => distancia += sala.distanciaSEQ);
         return new Componente(distancia, Tipos.TipoUnidadeQuantidades.METRO, this.tipoFibra);
+    } 
+    defineFibrasOpticas(quantidadeFibrasRecebidas = 12, tipoFibraRecebida = Tipos.TipoFibraOptica.FOSM_9_125) {
+        let tipoFibra = this.fibraBackbone.tipo;
+        this.salasDeTelecom.forEach(sala => {
+            sala.fibrasOpticasRecebidas = new Componente(sala.numeroFibras, Tipos.TipoUnidadeQuantidades.UNIDADE, tipoFibra);
+            sala.save();
+        });
+        this.salasDeEquipamento.forEach(sala => {
+            sala.fibrasOpticasRecebidas = new Componente(sala.numeroFibras, Tipos.TipoUnidadeQuantidades.UNIDADE, tipoFibra);
+            sala.save();
+        });
+        this.fibrasOpticasRecebidas = new Componente(quantidadeFibrasRecebidas, Tipos.TipoUnidadeQuantidades.UNIDADE, tipoFibraRecebida);
     }
+
     defineAtivos() {
         var _a, _b;
-        super.defineAtivos();
         // this.salasDeTelecom.forEach(sala => sala.diciplinas.has(Tipos.TipoPontoTelecom.CFTV));
         if (this.equipamentosAtivos.get(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO) != undefined) {
             this.equipamentosAtivos.delete(Tipos.TipoEquipamentoRack.TERMINADOR_OPTICO);
@@ -103,17 +118,54 @@ class SEQ extends SalaTelecom {
             this.defineAcopladores(tipoAcoplador, this.fibrasOpticasRecebidas.quantidade);
         }
     }
-    defineFibrasOpticas(quantidadeFibrasRecebidas = 12, tipoFibraRecebida = Tipos.TipoFibraOptica.FOSM_9_125) {
-        let tipoFibra = this.fibraBackbone.tipo;
-        this.salasDeTelecom.forEach(sala => {
-            sala.fibrasOpticasRecebidas = new Componente(sala.numeroFibras, Tipos.TipoUnidadeQuantidades.UNIDADE, tipoFibra);
-            sala.save();
+    get equipamentos() {
+        let equipamentos = new Map();
+        this.racks.forEach(rack => {
+            rack.equipamentos.forEach(equipamento => {
+                let equipamentoSalvo = equipamentos.get(equipamento.tipo);
+                if (equipamentoSalvo !== undefined) {
+                    equipamentoSalvo.quantidade += equipamento.quantidade;
+                    equipamentos.set(equipamento.tipo, equipamento);
+                }
+            });
         });
-        this.salasDeEquipamento.forEach(sala => {
-            sala.fibrasOpticasRecebidas = new Componente(sala.numeroFibras, Tipos.TipoUnidadeQuantidades.UNIDADE, tipoFibra);
-            sala.save();
-        });
-        this.fibrasOpticasRecebidas = new Componente(quantidadeFibrasRecebidas, Tipos.TipoUnidadeQuantidades.UNIDADE, tipoFibraRecebida);
+        return equipamentos;
+    }
+    get racks() {
+        let racks = [];
+        // 20 por que ainda será contado os patch panels, exaustor e outros componentes.
+        try {
+            return [new Rack(this.equipamentosAtivos, this.rackAberto)];
+        }
+        catch (error) {
+            /** Algoritmo da divisão de componentes
+             *
+             * Como um rack tem limite máximo de 48u, preucupo-me em reservar um espaço para os
+             * componetes que ainda serão postos. A estratégia de divisão é buscar preencher o maior
+             * rack possivel, caso sobre, divide em racks de tamanhos similares e menores. Com os
+             * racks divididos, ele calcula como seria adcionar itens a cada rack seguindo a ordem de
+             * disposição dos itens, sem mesclas.
+             */
+            let k = 1;
+            for (; Rack.arredondaAltura(error.altura / k) < 48; k++);
+            const fracao = Rack.arredondaAltura(error.altura / k);
+            let cont = fracao;
+            let selecionados = new Map();
+            this.equipamentosAtivos.forEach(equipamento => {
+                if (cont - equipamento.quantidade < 0) {
+                    selecionados.set(equipamento.tipo, new EquipamentoRack(equipamento.tipo, cont, equipamento.alturaUnitaria));
+                    racks.push(new Rack(selecionados));
+                    selecionados.clear();
+                    selecionados.set(equipamento.tipo, new EquipamentoRack(equipamento.tipo, -(cont - equipamento.quantidade), equipamento.alturaUnitaria));
+                    cont = fracao + cont - equipamento.quantidade;
+                }
+                else {
+                    selecionados.set(equipamento.tipo, equipamento);
+                }
+            });
+            racks.push(new Rack(selecionados));
+        }
+        return racks;
     }
 }
 
