@@ -36,6 +36,7 @@ export class Rack {
             equipamentosAtivos.set(TipoEquipamentoRack.EXAUSTOR, new EquipamentoRack(TipoEquipamentoRack.EXAUSTOR, 1, 1));
         this.componentes.set(TipoComponenteRack.BANDEJA_DESLIZANTE, new ComponenteRack(TipoComponenteRack.BANDEJA_DESLIZANTE, 1, 4));
         this.componentes.set(TipoComponenteRack.BANDEJA_FIXA, new ComponenteRack(TipoComponenteRack.BANDEJA_FIXA, 1, 1));
+        
         let quantidadeDIO = (_b = (_a = this.equipamentos.get(TipoEquipamentoRack.DIO_24)) === null || _a === void 0 ? void 0 : _a.quantidade) !== null && _b !== void 0 ? _b : 0;
         this.componentes.set(TipoComponenteRack.BANDEJA_DE_EMENDA_12, new ComponenteRack(TipoComponenteRack.BANDEJA_DE_EMENDA_12, quantidadeDIO, 0));
         let quantidadeSwitches = 0;

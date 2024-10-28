@@ -1,94 +1,42 @@
 import { 
-    SEQForms, 
-    InputInt 
+    SEQPrimariaForms,
+    SEQForms
 } from "./../exports/formsExports.js";
 
 
 function updateSetup(input) {
 
-    let seqs = [];
-    let seqPrincipal = undefined;
-
     $('#formulario').empty();
     $('#formulario').removeClass('hidden');
 
-    if ($(input).val() === 'sem-seq-secundaria') {
-        
-        $("#numero-seqs-input-input-group").remove();
-        $("#seq-principal-input-input-group").remove();
-        
-        return updateForms([], undefined);
-    
-    }
-    
-    [seqs, seqPrincipal] = setForMultipleSEQs(seqs, seqPrincipal);
-    
-    return updateForms(seqs, seqPrincipal);
+    if ($(input).val() === 'primario')
+        return setBackbonePrimario();
+    return setBackboneSecundario();
 
 }
 
-function setForMultipleSEQs(seqs, seqPrincipal) {
+function setBackbonePrimario() {
 
-    let quantidadeSEQInput = new InputInt(
-    "Número de salas de equipamento:",
-    "numero-seqs-input",
-    1,
-    24,
-    1,
-    false,
-    1
-    );
-    
-    seqPrincipal = new InputInt(
-    "Número da sala de equipamentos principal:",
-    "seq-principal-input",
-    1,
-    1,
-    1,
-    false,
-    1
-    );
+    let $seq = new SEQPrimariaForms();
+    $seq.$element.appendTo("#formulario");
 
-    quantidadeSEQInput.onUpdate(quantidadeSEQs => {
-    // let $seqs = $("#formulario .seq");
-    
-        while (seqs.length > quantidadeSEQs) {
-            let last = seqs.pop();
-            $('#' + last.id).remove();
-        }
-        
-        while (seqs.length < quantidadeSEQs) {
-            let novaseq = new SEQForms(seqs.length);
-            
-            seqs.push(novaseq);
-            novaseq.$element.appendTo("#formulario");
-        }
-
-        $("#seq-principal-input").attr("max", quantidadeSEQs);
-
-        if (parseInt($("#seq-principal-input").val()) > quantidadeSEQs)
-            $("#seq-principal-input").val(quantidadeSEQs);
-
-    });
-
-    quantidadeSEQInput.$element.appendTo("#setup");
-    seqPrincipal.$element.appendTo("#setup");
-
-    //seqs.push(new SEQForms(0));
-
-    return [seqs, seqPrincipal];
+    return updateForms($seq, true);
 
 }
 
-function updateForms(seqs, seqPrincipal) {
+function setBackboneSecundario() {
 
-    seqs.push(new SEQForms(0));
-    seqs[0].$element.appendTo('#formulario');
+    let $seq = new SEQForms();
+    $seq.$element.appendTo("#formulario");
+
+    return updateForms($seq, false);
+
+}
+
+function updateForms($seq, backbonePrimario) {
 
     $('body')[0].offsetHeight; // força o recálculo do tamanho do body
-
-
-    return [seqs, seqPrincipal];
+    return [$seq, backbonePrimario];
 
 }
 

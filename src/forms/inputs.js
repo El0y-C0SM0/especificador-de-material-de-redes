@@ -92,7 +92,7 @@ class Checkbox {
       <div id="${this.id}-input-group" class="input-group">
         <label id="${this.id}-label">
           ${this.label}
-          <input id='${this.id}' type="checkbox">
+          <input id='${this.id}' type='checkbox' ${this.valueDefault ? 'checked' : 'unchecked'}>
         </label>
       </div>
     `;
@@ -101,6 +101,7 @@ class Checkbox {
   get value() {
     return document.getElementById(this.id).checked;
   }
+
 }
 
 class SelectField {

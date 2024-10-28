@@ -5,6 +5,7 @@ import {
     RackModel as Rack
 } from "../../exports/modelsExports.js"
 
+
 //import SalaTelecom from "./SalaTelecom.js";
 
 class SEQ /*extends SalaTelecom*/ {

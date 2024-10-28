@@ -6,12 +6,13 @@ export var TipoCaboUTP;
     TipoCaboUTP["BRANCO_CAT6"] = "branco CAT6";
     TipoCaboUTP["CINZA_CAT7"] = "cinza CAT7";
 })(TipoCaboUTP || (TipoCaboUTP = {}));
-;
+
 export var TipoConector;
 (function (TipoConector) {
     TipoConector["CAT6"] = "Conector fem\u00EAa CAT6";
 })(TipoConector || (TipoConector = {}));
-;
+
+
 export class TipoPontoTelecom {
     static toTipoPatchCord(tipoPonto) {
         switch (tipoPonto) {
@@ -36,9 +37,11 @@ export class TipoPontoTelecom {
         }
     }
 }
+
 TipoPontoTelecom.REDE = "Rede";
 TipoPontoTelecom.CFTV = "CFTV";
 TipoPontoTelecom.VOIP = "VoIP";
+
 export class TipoAcopladorPigtailCordao {
     static getTipo(tipo, duplo) {
         if (tipo == TipoFibraOptica.FOMMIG_50_125) {
@@ -55,6 +58,7 @@ export class TipoAcopladorPigtailCordao {
         }
     }
 }
+
 TipoAcopladorPigtailCordao.LC_DUPLO_MM_50_125 = "LC duplo MM 50x125µm";
 TipoAcopladorPigtailCordao.LC_SIMPLES_MM_50_125 = "LC simples MM 50x125µm";
 TipoAcopladorPigtailCordao.LC_DUPLO_SM_9_125 = "LC duplo SM 9x125µm";
