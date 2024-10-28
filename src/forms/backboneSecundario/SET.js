@@ -51,7 +51,7 @@ class SETForm {
 
     get html() {
         return `
-            <div id=${this.id} class="set">
+            <article id=${this.id} class="set">
                 <h2>SET do ${this.numPavimento + 1}º Andar.</h2>
                 ${this.tipoFibraRecebidaSelectField.html}
                 <div id="disciplinas-${this.numPavimento}" class="disciplinas">
@@ -59,13 +59,13 @@ class SETForm {
                     ${this.atendeDadosInput.html}
                     ${this.atendeVoipInput.html}
                 </div>
-            </div>
+            </article>
         `
     }
 
     get $element() {
 
-        let $section = $(`<section id="${this.id}" class="set"></section>`);
+        let $section = $(`<article id="${this.id}" class="set"></article>`);
 
 
         let $h2 = $(`<h2>SET do ${this.numPavimento + 1}º Andar.</h2>`);

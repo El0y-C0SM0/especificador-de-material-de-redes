@@ -76,7 +76,7 @@ class SEQSecundariaForm {
     }
 
     get $element() {
-        let $section = $(`<section id="${this.id}" class="seq"></section>`);
+        let $section = $(`<article id="${this.id}" class="seq"></section>`);
     
         let $h2 = $(`<h2>SEQ Secundária ${this.numeroSEQ+1}</h2>`);
         $section.append($h2);

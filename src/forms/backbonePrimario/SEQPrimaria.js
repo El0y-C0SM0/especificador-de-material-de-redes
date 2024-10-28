@@ -106,7 +106,7 @@ class SEQPrimariaForm {
         let $section = $(`<section id="${this.id}" class="seq"></section>`);
         
 
-        let $h2 = $(`<h2>Sala de equipamentos principal}</h2>`);
+        let $h2 = $(`<h2>Sala de equipamentos principal</h2>`);
     
 
         let $seqFormDiv = $(`<div class="seq-form"></div>`);

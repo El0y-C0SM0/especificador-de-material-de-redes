@@ -36,7 +36,7 @@ class Tabela {
 
   get html() {
     return `
-      <article id="${this.id}">
+      <div id="${this.id}">
         <h2>${this.titulo}</h2>
         <p>${this.descricao}</p>
         <table>
@@ -51,7 +51,7 @@ class Tabela {
               }).join("\n")}
           </tbody>
         </table>
-      </article>
+      </div>
         `;
   }
 

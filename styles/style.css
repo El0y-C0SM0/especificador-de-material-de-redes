@@ -107,12 +107,31 @@ header h2 {
   @apply flex flex-wrap justify-center;
 }
 
-.pontos-telecom {
+article {
+
+  background-color: #d1e3e2;
+  border: dashed 1px #4e4d4e;
+  border-radius: 5px;
+
+  margin: 1rem;
+  padding: 0.5rem;
+
+}
+
+.disciplinas {
   @apply flex flex-wrap flex-row justify-between pb-2;
 }
 
-.pontos-telecom .input-group {
+.disciplinas .input-group {
   @apply w-[25%];
+  margin: 1rem auto;
+  align-content: center;
+}
+
+label {
+  display: block;
+  margin: auto;
+  align-content: center;
 }
 
 .input-group {

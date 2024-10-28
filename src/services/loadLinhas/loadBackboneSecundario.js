@@ -177,7 +177,7 @@ function calcularCabos(seq) {
         if (_caboRepetido==-1) {
 
             linhasCabos.push(new Tabela.LinhaTabela(
-                `Cabo de ${_cabo[0]} Loose - com ${_cabo[1]} fibras`,
+                `Cabo de ${_cabo[0]} Tightbuffer - com ${_cabo[1]} fibras`,
                 _cabo[2],
                 "m"
             ))
@@ -205,10 +205,10 @@ function calcularCabo(set, peDireito, andarSEQ) {
 
 /*
 linhas.push(new Tabela.LinhaTabela(
-        "Cabo de Fibra Óptica Loose (FOMMIG) 50 x 125µm - com 8 fibras"
-        tamanhoCabo,
-        "m"
-    ));
+    "Cabo de Fibra Óptica Loose (FOMMIG) 50 x 125µm - com 8 fibras"
+    tamanhoCabo,
+    "m"
+));
 */
 
 export default loadBackBoneSecundario;

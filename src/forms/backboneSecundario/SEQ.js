@@ -31,7 +31,7 @@ class SEQForm {
             "Andar da SEQ (número do set):",
             "andar-seq-input",
             1,
-            2,
+            1,
             1,
             false,
             undefined 
@@ -63,10 +63,10 @@ class SEQForm {
                 $(`#${this.id} .sets`).append($(novoSET.html));
             }
 
-            $(`#${this.id} #set-principal-input`).attr("max", quantPavimentos);
+            $(`#${this.id} #andar-seq-input`).attr("max", quantPavimentos);
 
-            if (parseInt($(`#${this.id} #set-principal-input`).val()) > quantPavimentos)
-                $(`#${this.id} #set-principal-input`).val(quantPavimentos);
+            if (parseInt($(`#${this.id} #andar-seq-input`).val()) > quantPavimentos)
+                $(`#${this.id} #andar-seq-input`).val(quantPavimentos);
 
             $('body')[0].offsetHeight;
 
