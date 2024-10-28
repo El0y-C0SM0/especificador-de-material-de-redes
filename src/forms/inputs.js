@@ -61,19 +61,19 @@ class InputNumber {
   get value() {}
 }
 
-export class InputInt extends InputNumber {
+class InputInt extends InputNumber {
   get value() {
     return parseInt($("#" + this.id).val());
   }
 }
 
-export class InputFloat extends InputNumber {
+class InputFloat extends InputNumber {
   get value() {
     return parseFloat($("#" + this.id).val());
   }
 }
 
-export class Checkbox {
+class Checkbox {
   label;
   id;
   valueDefault;
@@ -92,7 +92,7 @@ export class Checkbox {
       <div id="${this.id}-input-group" class="input-group">
         <label id="${this.id}-label">
           ${this.label}
-          <input id='${this.id}' type="checkbox">
+          <input id='${this.id}' type='checkbox' ${this.valueDefault ? 'checked' : 'unchecked'}>
         </label>
       </div>
     `;
@@ -101,9 +101,10 @@ export class Checkbox {
   get value() {
     return document.getElementById(this.id).checked;
   }
+
 }
 
-export class SelectField {
+class SelectField {
   label;
   itens;
   keyDefault;
@@ -144,3 +145,5 @@ export class SelectField {
     return this.itens[$select.val()];
   }
 }
+
+export { InputInt, InputFloat, Checkbox, SelectField };

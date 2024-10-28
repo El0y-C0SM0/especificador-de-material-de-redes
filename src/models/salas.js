@@ -1,6 +1,6 @@
-import { Componente, EquipamentoRack, Rack } from "./componente.js";
-import * as Tipos from './tipos.js';
-import { DistanciaInvalidaError, } from "./excecoes.js";
+import { Componente, EquipamentoRack, Rack } from "./componente";
+import * as Tipos from './tipos';
+import { DistanciaInvalidaError, } from "./excecoes";
 export class AreaDeTrabalho {
     constructor(pontosTelecom) {
         this.patchCords = new Map();

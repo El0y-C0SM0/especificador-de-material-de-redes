@@ -1,51 +1,83 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
   <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <link rel="stylesheet" href="styles/style.css">
     <title>Quantificação de material de Rede</title>
+
   </head> 
+
   <body class="h-screen">
+
     <header>
       <h1>Quantificação de backbone óptico</h1>
       <h2>Dados de entrada</h2>
     </header>
+
     <main  id="root">
+
       <section id="setup">
-        <h2 class="p-2 text-lg">Haverão salas de equipamentos secundárias?</h2>
+
+        <h2 class="p-2 text-lg">Backbone Primário ou Secundário</h2>
+
         <div class="flex items-center space-x-2 p-2">
-          <input type="radio" value="sem-seq-secundaria" id="sem-seq-secundaria" name="seq-secundaria" />
-          <label for="sem-seq-secundaria">Não terá sala de equipamentos secundária.</label>
+
+          <input type="radio" value="primario" id="primario" name="backbone" />
+          <label for="primario">Backbone Primário</label>
+
         </div>
+
         <div class="flex items-center space-x-2 p-2">
-          <input type="radio" value="com-seq-secundaria" id="com-seq-secundaria" name="seq-secundaria"/>
-          <label for="com-seq-secundaria">Terá sala de equipamentos secundária.</label>
+
+          <input type="radio" value="secundario" id="secundario" name="backbone"/>
+          <label for="secundario">Backbone Secundário</label>
+
         </div>
+
       </section>
+
       <section id="formulario" class="hidden"></section>
+
       <button id="gerar-tabela-btn">Gerar tabela</button>
+
       <section id="tabelas"></section>
+
     </main>
+
     <footer class="mx-auto md:w-2/3 mb-5">
+
       <h2 class="text-2xl font-bold m-4">Contribuidores</h2>
+
       <div class="flex justify-between">
+
         <a href="https://github.com/MatheusViniciusV" target="_blank" rel="noopener noreferrer">
           @MatheusViniciusV
         </a>
+
         <a href="https://github.com/El0y-C0SM0" target="_blank" rel="noopener noreferrer">
           @El0y-C0SM0
         </a>
+
         <a href="https://github.com/VPom135" target="_blank" rel="noopener noreferrer">
           @VPom135
         </a>
+
       </div>
+
     </footer>
+
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    
+    <script type="module" src="src/exports/formsExports.js" crossorigin="anonymous"></script>
+    <script type="module" src="src/exports/modelsExports.js" crossorigin="anonymous"></script>
+    <script type="module" src="src/exports/servicesExports.js" crossorigin="anonymous"></script>
+
     <script type="module" src="index.js" crossorigin="anonymous"></script>
-    <script type="module" src="src/models/exports.js" crossorigin="anonymous"></script>
-    <script type="module" src="src/forms/inputs.js" crossorigin="anonymous"></script>
-    <script type="module" src="src/forms/components.js" crossorigin="anonymous"></script>
-    <script type="module" src="src/forms/tables.js" crossorigin="anonymous"></script>
+
   </body>
+
 </html>

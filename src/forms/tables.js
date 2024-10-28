@@ -1,4 +1,5 @@
-export class Tabela {
+class Tabela {
+  
   titulo;
   descricao;
   id;
@@ -45,11 +46,9 @@ export class Tabela {
             <th>Unidade</th>
           </thead>
           <tbody>
-            ${this.linhas
-              .map((linha) => {
+            ${this.linhas.map((linha) => {
                 if (linha.quantidade > 0) return linha.html;
-              })
-              .join("\n")}
+              }).join("\n")}
           </tbody>
         </table>
       </article>
@@ -60,3 +59,5 @@ export class Tabela {
     return $(this.html);
   }
 }
+
+export default Tabela;
